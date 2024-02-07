@@ -7,8 +7,8 @@ mail:
   host: smtp.gmail.com
   protocol: smtp
   port: 587
-  username: holidayplans.lt@gmail.com
-  password: hjxluzqdwvzhuxjh
+  username: ${EMAIL}
+  password: ${PASSWORD}
 
 
 
