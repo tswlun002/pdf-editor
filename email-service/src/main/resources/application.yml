@@ -1,0 +1,18 @@
+spring:
+  config:
+    import: optional:file:.env[.properties]
+  application:
+    name: email-service
+server:
+  port: 8081
+mail:
+  host: smtp.gmail.com
+  protocol: smtp
+  port: 587
+  username: ${EMAIL}
+  password: ${PASSWORD}
+
+
+
+
+

@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.Part;
 import lombok.AllArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +23,7 @@ import static org.springframework.http.HttpStatus.OK;
 @Validated
 public class EmailController {
     private final  EmailService emailService;
-    @PostMapping("/send")
+    @PostMapping(value = "/send",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?>  sendEmail(HttpServletRequest request) throws ServletException, IOException {
 
         Part sendEmailRequest = request.getPart("email");
