@@ -3,7 +3,7 @@ import com.userservice.utils.Constant;
 import jakarta.validation.constraints.Email;
 public record UserRegister(
 
-        @Email(message = "")
+        @Email(message =Constant.EMAIL_VALID_MESS)
         String email
 ) {
 }
