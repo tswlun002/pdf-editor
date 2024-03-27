@@ -12,6 +12,7 @@ import java.util.Map;
 public class PDF {
         public static ByteArrayOutputStream generatePdfStream() throws DocumentException {
             /**
+             *
              * Map.put("Firstname",
              * list.add(
              *
@@ -21,12 +22,14 @@ public class PDF {
             List<String> lastnames= List.of("Tsewu","Tsewu","Tsewu","Nqiwa");
             queryResults.put("Firstname", Collections.singletonList(firstnames));
             queryResults.put("Lastname",Collections.singletonList(lastnames));
+
+            //create and open document
             Document document = new Document();
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             PdfWriter.getInstance(document, outputStream);
             document.open();
+
             // Write column names
-            //Map<String, Object> firstRow = queryResults.get(0);
             for (String column : queryResults.keySet()) {
                 Font boldFont = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
                 Paragraph paragraph = new Paragraph(column, boldFont);

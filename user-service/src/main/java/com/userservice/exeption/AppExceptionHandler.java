@@ -2,6 +2,7 @@ package com.userservice.exeption;
 
 import jakarta.validation.ConstraintViolationException;
 import lombok.NonNull;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -26,10 +27,14 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
                                                                   @NonNull HttpHeaders headers,
                                                                   @NonNull HttpStatusCode status, @NonNull WebRequest request) {
 
+        var message = String.join( ",", ex.getAllErrors()
+                .stream().map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .toList()
+        );
         var exc = AppException.builder()
                 .statusCode(status.value())
                 .statusCodeMessage(HttpStatus.METHOD_NOT_ALLOWED.name())
-                .message(ex.getMessage()).
+                .message(message).
                 path(request.getContextPath())
                 .time(LocalDateTime.now())
                 .build();
