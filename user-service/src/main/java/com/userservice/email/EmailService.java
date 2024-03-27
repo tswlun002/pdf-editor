@@ -1,5 +1,6 @@
 package com.userservice.email;
 
+import com.itextpdf.text.DocumentException;
 import com.userservice.pdffile.PDF;
 import com.userservice.user.IUser;
 import com.userservice.user.User;
@@ -46,25 +47,24 @@ public class EmailService implements  IEmail {
             body.add("email", new EmailRequest(user.getEmail()));
             HttpEntity<MultiValueMap<String, Object>> requestEntity
                     = new HttpEntity<>(body, headers);
-
-           // var url = String.format("http://localhost:8081/pdf-editor/email/send/%s",user.getEmail());
             response = restTemplate.postForEntity("http://localhost:8081/pdf-editor/email/send",requestEntity, String.class);
+
         } catch (HttpClientErrorException e) {
-            if (e.getStatusCode() == HttpStatus.OK) {
+            if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
                 // Handle 404 error
                 log.info("Error:-----------> message:{},status code:{}", e.getMessage(),4004);
+                throw  new RuntimeException(e);
             }
-        } catch (HttpServerErrorException e) {
-            if (e.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR) {
+        } catch (HttpServerErrorException | DocumentException e) {
+            if (e instanceof HttpServerErrorException ex)
+                if(ex.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR) {
                 // Handle 500 error
                 log.info("Error:-----------> message:{},status code:{}", e.getMessage(),500);
+                throw new RuntimeException(ex);
             }
+            else  throw new RuntimeException(e);
 
-        } catch (Exception e) {
-            log.info("Error:-----------> message:{}", e.getMessage());
         }
-
-
         return response != null && response.getStatusCode() == HttpStatus.OK;
     }
 }

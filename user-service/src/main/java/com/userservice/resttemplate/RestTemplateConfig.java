@@ -38,6 +38,8 @@ public class RestTemplateConfig {
     @Bean
     public  RestTemplate restTemplate(){
        var requestFactory = requestFactory();
+       requestFactory.setConnectionRequestTimeout(TIME_OUT);
+       requestFactory.setConnectTimeout(TIME_OUT);
         return new RestTemplate(requestFactory);
     }
 }
