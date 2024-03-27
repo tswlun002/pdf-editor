@@ -1,5 +1,6 @@
 package com.userservice.user;
 
+import com.userservice.utils.Constant;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.*;
@@ -21,7 +22,7 @@ public class User {
     private  int Id;
     @NonNull
     @Column(unique = true, nullable = false)
-    @Email
+    @Email(message = Constant.EMAIL_VALID_MESS)
     private  String email;
 
     @Override
