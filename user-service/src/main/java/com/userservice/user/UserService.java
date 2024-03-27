@@ -39,7 +39,7 @@ public class UserService implements IUser {
         }catch (Exception e){
           log.info("Internal error {}",e.getMessage());
         }
-        if(saved) log.info("User is saved db.");
+        if(saved) log.info("User is saved to db.");
         return saved;
     }
 

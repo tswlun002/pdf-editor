@@ -14,5 +14,8 @@ spring:
     name: user-service
 server:
   port: 8080
+rest-template:
+  timeout: 600000
+  pool-size: 5
 
 

@@ -8,6 +8,7 @@ import jakarta.servlet.http.Part;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.CharEncoding;
 import org.apache.commons.io.FileUtils;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.DefaultResourceLoader;
@@ -50,21 +51,19 @@ public class EmailService {
         };
 
         MimeMessage message = mailSender.createMimeMessage();
-        Properties properties = System.getProperties();
-        properties.setProperty("mail.smtp.host", Objects.requireNonNull(environment.getProperty("mail.protocol")));
-
         var sent =false;
         try {
 
-            message.setFrom(new InternetAddress(Objects.requireNonNull(environment.getProperty("mail.host"))));
+            message.setFrom(new InternetAddress(Objects.requireNonNull(environment.getProperty("mail.username"))));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
             message.setSubject("EDITED PDF FILE");
-            String emailTemplate = readFile.apply("emailTemplate.html");
+            String emailTemplate = readFile.apply("/emailTemplate.html");
             emailTemplate =emailTemplate.replace("${firstname}","Name") ;
             message.setContent(emailTemplate,"text/html; charset=utf-8");
 
-            MimeMessageHelper helper =  new MimeMessageHelper(message);
+            MimeMessageHelper helper =  new MimeMessageHelper(message,true, CharEncoding.UTF_8);
             helper.addAttachment("Name-edited.pdf",partToFile.apply(filePart,"Name-edited.pdf"));
+            mailSender.send(message);
             sent=true;
             log.info("------------------> Sent message successfully to user email: {}",recipient);
         } catch (
