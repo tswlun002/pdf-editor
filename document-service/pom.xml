@@ -14,9 +14,17 @@
     <name>document-service</name>
     <url>https://maven.apache.org</url>
     <properties>
+<<<<<<< HEAD
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
        <dependencies>
+=======
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+    <dependencies>
+>>>>>>> 8452314 (moved all the classes related to document creation to document service)
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -27,10 +35,13 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
+<<<<<<< HEAD
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
         </dependency>
         <dependency>
+=======
+>>>>>>> 8452314 (moved all the classes related to document creation to document service)
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
         </dependency>
@@ -39,6 +50,7 @@
             <artifactId>itextpdf</artifactId>
             <version>5.5.13.2</version>
         </dependency>
+<<<<<<< HEAD
            <dependency>
                <groupId>org.modelmapper</groupId>
                <artifactId>modelmapper</artifactId>
@@ -48,6 +60,11 @@
             <groupId>jakarta.persistence</groupId>
             <artifactId>jakarta.persistence-api</artifactId>
             <version>3.1.0</version>
+=======
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+>>>>>>> 8452314 (moved all the classes related to document creation to document service)
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents.client5</groupId>
@@ -58,6 +75,7 @@
             <artifactId>httpclient</artifactId>
             <version>4.5.13</version>
         </dependency>
+<<<<<<< HEAD
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-config</artifactId>
@@ -97,4 +115,7 @@
             </plugin>
         </plugins>
     </build>
+=======
+    </dependencies>
+>>>>>>> 8452314 (moved all the classes related to document creation to document service)
 </project>
