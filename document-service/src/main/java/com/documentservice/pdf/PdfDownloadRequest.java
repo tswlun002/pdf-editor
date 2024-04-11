@@ -1,4 +1,4 @@
-package com.userservice.pdffile;
+package com.documentservice.pdf;
 
 public record PdfDownloadRequest(
 
