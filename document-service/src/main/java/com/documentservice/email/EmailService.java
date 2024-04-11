@@ -1,9 +1,7 @@
-package com.userservice.email;
+package com.documentservice.email;
 
-import com.itextpdf.text.DocumentException;
-import com.userservice.pdffile.PDF;
-import com.userservice.user.IUser;
-import com.userservice.user.User;
+import com.documentservice.exception.InternalServerError;
+import com.documentservice.pdf.PDF;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,21 +14,19 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 @Validated
 @Service
 public class EmailService implements  IEmail {
-    private final IUser user;
     private final RestTemplate restTemplate;
 
     @Override
-    public Optional<Boolean> sendEmail( String username) {
-        return user.findUserByEmail(username).map(this::getResponse);
+    public boolean sendEmail(PDF pdf) {
+        return getResponse(pdf);
     }
 
-    private @Valid Boolean getResponse(@Valid User user) {
+    private @Valid Boolean getResponse(PDF pdf) {
         ResponseEntity<String> response = null;
          record EmailRequest(
                 String recipient
@@ -43,8 +39,8 @@ public class EmailService implements  IEmail {
             headers.setContentType(MediaType.MULTIPART_FORM_DATA);
             MultiValueMap<String, Object> body
                     = new LinkedMultiValueMap<>();
-            body.add("pdf", PDF.generatePdfStream().toByteArray());
-            body.add("email", new EmailRequest(user.getEmail()));
+            body.add("pdf",  pdf.getImage());
+            body.add("email", new EmailRequest(pdf.getEmail()));
             HttpEntity<MultiValueMap<String, Object>> requestEntity
                     = new HttpEntity<>(body, headers);
             response = restTemplate.postForEntity("http://localhost:8081/pdf-editor/email/send",requestEntity, String.class);
@@ -55,14 +51,10 @@ public class EmailService implements  IEmail {
                 log.info("Error:-----------> message:{},status code:{}", e.getMessage(),4004);
                 throw  new RuntimeException(e);
             }
-        } catch (HttpServerErrorException | DocumentException e) {
-            if (e instanceof HttpServerErrorException ex)
-                if(ex.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR) {
+        } catch (HttpServerErrorException e) {
                 // Handle 500 error
                 log.info("Error:-----------> message:{},status code:{}", e.getMessage(),500);
-                throw new RuntimeException(ex);
-            }
-            else  throw new RuntimeException(e);
+                throw new InternalServerError("Internal server error.");
 
         }
         return response != null && response.getStatusCode() == HttpStatus.OK;
