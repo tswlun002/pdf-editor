@@ -10,8 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Slf4j
@@ -45,17 +43,9 @@ public class EmailService implements  IEmail {
                     = new HttpEntity<>(body, headers);
             response = restTemplate.postForEntity("http://localhost:8081/pdf-editor/email/send",requestEntity, String.class);
 
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
-                // Handle 404 error
-                log.info("Error:-----------> message:{},status code:{}", e.getMessage(),4004);
-                throw  new RuntimeException(e);
-            }
-        } catch (HttpServerErrorException e) {
-                // Handle 500 error
+        } catch (Exception e) {
                 log.info("Error:-----------> message:{},status code:{}", e.getMessage(),500);
                 throw new InternalServerError("Internal server error.");
-
         }
         return response != null && response.getStatusCode() == HttpStatus.OK;
     }
