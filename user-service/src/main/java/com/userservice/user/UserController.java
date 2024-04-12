@@ -1,6 +1,4 @@
 package com.userservice.user;
-
-import com.userservice.email.IEmail;
 import com.userservice.exeption.EntityNotFoundException;
 import com.userservice.utils.Constant;
 import jakarta.validation.Valid;
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 public class UserController {
     private  final IUser userService;
-    private  final IEmail emailService;
      @PostMapping("/register/")
      public  ResponseEntity<?> registerUser(@RequestBody @Valid UserRegister register){
           return userService.createUser(register)?
@@ -33,13 +30,5 @@ public class UserController {
                 orElseThrow(()-> new EntityNotFoundException("User","Email",email));
 
         return new ResponseEntity<>(new UserResponse(user.getEmail()), HttpStatus.OK);
-    }
-    @GetMapping("/download/{email}")
-    public  ResponseEntity<?> downloadPdf(@PathVariable("email") @Email(message = Constant.EMAIL_VALID_MESS)
-                                         String email){
-         var resp= emailService.sendEmail(email);
-         var isDownloaded =resp.isPresent()&&resp.get();
-         return  new ResponseEntity<>(isDownloaded?"Pdf is sent to email.":"Failed to send email.",
-                 isDownloaded?HttpStatus.OK:HttpStatus.BAD_REQUEST);
     }
 }
