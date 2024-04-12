@@ -1,15 +1,17 @@
-package com.userservice.pdffile;
+package com.documentservice.pdf;
+
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
+
 import java.io.ByteArrayOutputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-public class PDF {
+public class GeneratePDF {
         public static ByteArrayOutputStream generatePdfStream() throws DocumentException {
             /**
              *
