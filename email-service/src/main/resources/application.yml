@@ -1,8 +1,30 @@
 spring:
+  profiles:
+    active: local
+---
+spring:
   config:
+    activate:
+      on-profile: local
     import: optional:file:.env[.properties]
   application:
     name: email-service
+  kafka:
+    topic: download-document-event
+    template:
+      default-topic: download-document-event
+    consumer:
+      bootstrap-server: localhost:9092
+      key-deserializer: "org.apache.kafka.common.serialization.StringDeserializer"
+      value-deserializer: "org.apache.kafka.common.serialization.ByteArrayDeserializer"
+      group-id: download-document-event-listener-group
+    producer:
+      bootstrap-server: localhost:9092
+      key-serializer: "org.apache.kafka.common.serialization.StringSerializer"
+      value-serializer: "org.apache.kafka.common.serialization.ByteArraySerializer"
+    admin:
+      properties:
+        bootstrap.servers: localhost:9092
 server:
   port: 8081
 mail:

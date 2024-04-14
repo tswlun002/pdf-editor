@@ -41,7 +41,7 @@ public class EmailService {
         Resource resource = resourceLoader.getResource(path);
         return asString(resource);
     };
-    public boolean sendEmail(@Email(message = "Enter valid email, e.g tswlun@gmail.com") String recipient, Part filePart  ) {
+    public boolean sendEmail(@Email(message = "Enter valid email, e.g tswlun@gmail.com") String recipient, byte[] file  ) {
 
         MimeMessage message = mailSender.createMimeMessage();
         var sent =false;
@@ -52,13 +52,13 @@ public class EmailService {
             String emailTemplate = readFile.apply("/emailTemplate.html");
             emailTemplate =emailTemplate.replace("${firstname}","customer") ;
             MimeMessageHelper helper =  new MimeMessageHelper(message,true, CharEncoding.UTF_8);
-            final DataSource attachment = new ByteArrayDataSource(filePart.getInputStream(), "application/octet-stream");
+            final DataSource attachment = new ByteArrayDataSource(file, "application/octet-stream");
             helper.setText(emailTemplate,true);
             helper.addAttachment("updated.pdf", attachment);
             mailSender.send(message);
             sent=true;
             log.info("------------------> Sent message successfully to user email: {}",recipient);
-        } catch (IOException | MessagingException e) {
+        } catch ( MessagingException e) {
             throw new RuntimeException(e);
         }
         return sent;
