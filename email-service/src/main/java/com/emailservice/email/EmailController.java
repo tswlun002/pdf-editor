@@ -11,9 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.io.IOException;
-
 import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -30,7 +28,7 @@ public class EmailController {
        Part pdfPart = request.getPart("pdf");
        if(sendEmailRequest==null) throw  new RuntimeException("Null email request");
        EmailRequest emailBody = new ObjectMapper().readValue(sendEmailRequest.getInputStream().readAllBytes(),EmailRequest.class);
-       return emailService.sendEmail(emailBody.recipient(),pdfPart)?
+       return emailService.sendEmail(emailBody.recipient(),pdfPart.getInputStream().readAllBytes())?
                new ResponseEntity<>("Edited pdf file is sent to your email",OK):
                new ResponseEntity<>("Failed to send pdf to email", NOT_ACCEPTABLE);
     }

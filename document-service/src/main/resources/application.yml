@@ -1,4 +1,11 @@
 spring:
+  profiles:
+    active: local
+---
+spring:
+  config:
+    activate:
+      on-profile: local
   jackson:
     parser:
       allow-unquoted-field-names: true
@@ -8,6 +15,17 @@ spring:
     mongodb:
       uri: mongodb+srv://pdf_document:pdfdocument@document-service.ux4nj27.mongodb.net/?retryWrites=true&w=majority&appName=document-service
       database: documents
+  kafka:
+    topic: download-document-event
+    template:
+      default-topic: download-document-event
+    producer:
+      bootstrap-server: localhost:9092
+      key-serializer: "org.apache.kafka.common.serialization.StringSerializer"
+      value-serializer: "org.apache.kafka.common.serialization.ByteArraySerializer"
+    admin:
+      properties:
+        bootstrap.servers: localhost:9092
 server:
   port: 8082
 rest-template:
