@@ -1,35 +1,39 @@
 spring:
+  profiles:
+    active: local
+---
+spring:
   config:
-    import: "optional:configserver:http://localhost:8071/" #optional:file:.env[.properties]
+    activate:
+      on-profile: local
+    import: optional:file:.env[.properties]
   application:
-    name: "email"
+    name: email-service
   kafka:
-    topics: git-configs
+    topic: download-document-event
     template:
-      default-topic: git-configs
+      default-topic: download-document-event
     consumer:
-      bootstrap-server: localhost:19095
+      bootstrap-server: localhost:9092
       key-deserializer: "org.apache.kafka.common.serialization.StringDeserializer"
-      value-deserializer: "org.apache.kafka.common.serialization.StringSerializer"
-      group-id: git-config-event-listener-group
-#    producer:
-#      bootstrap-server: localhost:9092,localhost:9093,localhost:9094
-#      key-serializer: "org.apache.kafka.common.serialization.StringSerializer"
-#      value-serializer: "org.apache.kafka.common.serialization.ByteArraySerializer"
+      value-deserializer: "org.apache.kafka.common.serialization.ByteArrayDeserializer"
+      group-id: download-document-event-listener-group
+    producer:
+      bootstrap-server: localhost:9092
+      key-serializer: "org.apache.kafka.common.serialization.StringSerializer"
+      value-serializer: "org.apache.kafka.common.serialization.ByteArraySerializer"
     admin:
       properties:
-        bootstrap.servers: localhost:19095
-#        max.in.flight.requests.per.connection: 1
-#        acks: All
-#        idempotence: true
-#        delivery.timeout.ms: 1200000
+        bootstrap.servers: localhost:9092
 server:
   port: 8081
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
+mail:
+  host: smtp.gmail.com
+  protocol: smtp
+  port: 587
+  username: ${EMAIL}
+  password: ${PASSWORD}
+
 
 
 
