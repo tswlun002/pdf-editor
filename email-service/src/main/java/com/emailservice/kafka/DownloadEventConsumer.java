@@ -14,7 +14,7 @@ import java.util.Arrays;
 public class DownloadEventConsumer {
     private final EmailService service;
 
-   @KafkaListener(topics = {"download-document-event"})
+   @KafkaListener(topics = {"download-document-event"},groupId = "download-document-event-listener-group")
     public void onDownloadDocument(ConsumerRecord<String, byte[]> consumerRecord){
        var email= consumerRecord.key();
        var file = consumerRecord.value();

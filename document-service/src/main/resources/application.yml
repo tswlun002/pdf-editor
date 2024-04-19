@@ -23,9 +23,12 @@ spring:
       bootstrap-server: localhost:9092
       key-serializer: "org.apache.kafka.common.serialization.StringSerializer"
       value-serializer: "org.apache.kafka.common.serialization.ByteArraySerializer"
+      retries: 10
+
     admin:
       properties:
         bootstrap.servers: localhost:9092
+
 server:
   port: 8082
 rest-template:
