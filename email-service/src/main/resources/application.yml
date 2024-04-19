@@ -1,6 +1,9 @@
 spring:
   profiles:
     active: local
+topics:
+  retry: "download-document-event.RETRY"
+  dead: "download-document-event.DEAD"
 ---
 spring:
   config:

@@ -6,15 +6,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
+
 import java.util.Arrays;
 
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class DownloadEventConsumer {
+public class DownloadEventRecoveryConsumer {
     private final EmailService service;
 
-   @KafkaListener(topics = {"download-document-event"},groupId = "download-document-event-listener-group")
+   @KafkaListener(topics = {"${topics.retry}"},groupId = "download-document-event-listener-group")
     public void onDownloadDocument(ConsumerRecord<String, byte[]> consumerRecord){
        var email= consumerRecord.key();
        var file = consumerRecord.value();
