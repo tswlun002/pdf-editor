@@ -29,7 +29,7 @@ spring:
       properties:
         bootstrap.servers: localhost:9092
 server:
-  port: 8081
+  port: 8083
 mail:
   host: smtp.gmail.com
   protocol: smtp

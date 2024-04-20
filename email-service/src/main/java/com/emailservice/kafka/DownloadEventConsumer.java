@@ -1,6 +1,7 @@
 package com.emailservice.kafka;
 
 import com.emailservice.email.EmailService;
+import com.emailservice.exception.MailSenderException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -15,7 +16,7 @@ public class DownloadEventConsumer {
     private final EmailService service;
 
    @KafkaListener(topics = {"download-document-event"},groupId = "download-document-event-listener-group")
-    public void onDownloadDocument(ConsumerRecord<String, byte[]> consumerRecord){
+    public void onDownloadDocument(ConsumerRecord<String, byte[]> consumerRecord) throws MailSenderException {
        var email= consumerRecord.key();
        var file = consumerRecord.value();
      log.info("Download document event listener was successful, data:{}",email+ Arrays.toString(file));
