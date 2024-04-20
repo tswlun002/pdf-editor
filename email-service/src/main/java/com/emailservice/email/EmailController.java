@@ -1,5 +1,6 @@
 package com.emailservice.email;
 
+import com.emailservice.exception.MailSenderException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,7 +23,7 @@ import static org.springframework.http.HttpStatus.OK;
 public class EmailController {
     private final  EmailService emailService;
     @PostMapping(value = "/send",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?>  sendEmail(HttpServletRequest request) throws ServletException, IOException {
+    public ResponseEntity<?>  sendEmail(HttpServletRequest request) throws ServletException, IOException, MailSenderException {
 
         Part sendEmailRequest = request.getPart("email");
        Part pdfPart = request.getPart("pdf");

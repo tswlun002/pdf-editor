@@ -13,8 +13,13 @@ spring:
     name: user-service
   data:
     mongodb:
-      uri: mongodb+srv://pdf_document:pdfdocument@document-service.ux4nj27.mongodb.net/?retryWrites=true&w=majority&appName=document-service
+      authentication-database: admin
       database: documents
+      host: localhost
+      port: 27017
+      username: document-service
+      password: pdfdocument
+      #uri: mongodb+srv://pdf_document:pdfdocument@document-service.ux4nj27.mongodb.net/?retryWrites=true&w=majority&appName=document-service
   kafka:
     topic: download-document-event
     template:
