@@ -1,14 +1,12 @@
 package com.emailservice.email;
 
+import com.emailservice.exception.MailSenderException;
 import jakarta.activation.DataSource;
 import jakarta.mail.Message;
-import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.util.ByteArrayDataSource;
-import jakarta.servlet.http.Part;
 import jakarta.validation.constraints.Email;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.CharEncoding;
@@ -16,6 +14,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -41,7 +40,7 @@ public class EmailService {
         Resource resource = resourceLoader.getResource(path);
         return asString(resource);
     };
-    public boolean sendEmail(@Email(message = "Enter valid email, e.g tswlun@gmail.com") String recipient, Part filePart  ) {
+    public boolean sendEmail(@Email(message = "Enter valid email, e.g tswlun@gmail.com") String recipient, byte[] file  ) throws MailSenderException {
 
         MimeMessage message = mailSender.createMimeMessage();
         var sent =false;
@@ -52,14 +51,21 @@ public class EmailService {
             String emailTemplate = readFile.apply("/emailTemplate.html");
             emailTemplate =emailTemplate.replace("${firstname}","customer") ;
             MimeMessageHelper helper =  new MimeMessageHelper(message,true, CharEncoding.UTF_8);
-            final DataSource attachment = new ByteArrayDataSource(filePart.getInputStream(), "application/octet-stream");
+            final DataSource attachment = new ByteArrayDataSource(file, "application/octet-stream");
             helper.setText(emailTemplate,true);
             helper.addAttachment("updated.pdf", attachment);
             mailSender.send(message);
             sent=true;
             log.info("------------------> Sent message successfully to user email: {}",recipient);
-        } catch (IOException | MessagingException e) {
-            throw new RuntimeException(e);
+        } catch ( Exception  e) {
+           if(e instanceof  com.sun.mail.util.MailConnectException || e instanceof MailSendException
+           ) {
+               log.info("MailSenderException is thrown : {}", e.getMessage(), e);
+
+               throw new MailSenderException(e.getCause().getMessage(), e);
+           }
+            log.info("DeadException is thrown : {}",e.getMessage(),e);
+            throw new RuntimeException("Dead for mail sender exception",e);
         }
         return sent;
     }

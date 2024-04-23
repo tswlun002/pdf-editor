@@ -1,52 +1,35 @@
 package com.documentservice.email;
 
 import com.documentservice.exception.InternalServerError;
+import com.documentservice.kafka.DownloadEventProducer;
+import com.documentservice.pdf.DownLoadDocumentEvent;
 import com.documentservice.pdf.PDF;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.client.RestTemplate;
 
 @Slf4j
 @RequiredArgsConstructor
 @Validated
 @Service
 public class EmailService implements  IEmail {
-    private final RestTemplate restTemplate;
+    private final DownloadEventProducer producer;
+
 
     @Override
     public boolean sendEmail(PDF pdf) {
         return getResponse(pdf);
     }
-
     private @Valid Boolean getResponse(PDF pdf) {
-        ResponseEntity<String> response = null;
-         record EmailRequest(
-                String recipient
-
-        ) {
-        }
+      var response=false;
         try {
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-            MultiValueMap<String, Object> body
-                    = new LinkedMultiValueMap<>();
-            body.add("pdf",  pdf.getImage());
-            body.add("email", new EmailRequest(pdf.getEmail()));
-            HttpEntity<MultiValueMap<String, Object>> requestEntity
-                    = new HttpEntity<>(body, headers);
-            response = restTemplate.postForEntity("http://localhost:8081/pdf-editor/email/send",requestEntity, String.class);
-
+            response=producer.sendDownloadEvent(new DownLoadDocumentEvent(pdf.getEmail(), pdf.getImage()));
         } catch (Exception e) {
-                log.info("Error:-----------> message:{},status code:{}", e.getMessage(),500);
+                log.info("Error:-----------> message:{},status code:{}", e.getMessage(),500,e);
                 throw new InternalServerError("Internal server error.");
         }
-        return response != null && response.getStatusCode() == HttpStatus.OK;
+        return response;
     }
 }
