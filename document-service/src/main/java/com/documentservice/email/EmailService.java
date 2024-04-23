@@ -27,7 +27,7 @@ public class EmailService implements  IEmail {
         try {
             response=producer.sendDownloadEvent(new DownLoadDocumentEvent(pdf.getEmail(), pdf.getImage()));
         } catch (Exception e) {
-                log.info("Error:-----------> message:{},status code:{}", e.getMessage(),500);
+                log.info("Error:-----------> message:{},status code:{}", e.getMessage(),500,e);
                 throw new InternalServerError("Internal server error.");
         }
         return response;
