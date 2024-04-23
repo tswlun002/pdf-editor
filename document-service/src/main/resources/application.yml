@@ -1,6 +1,9 @@
 spring:
   profiles:
     active: local
+
+topics:
+  download-document-name: download-document-event
 ---
 spring:
   config:
@@ -25,14 +28,18 @@ spring:
     template:
       default-topic: download-document-event
     producer:
-      bootstrap-server: localhost:9092
+      bootstrap-server: localhost:9092, localhost:9093, localhost:9094
       key-serializer: "org.apache.kafka.common.serialization.StringSerializer"
       value-serializer: "org.apache.kafka.common.serialization.ByteArraySerializer"
-      retries: 10
-
+      properties:
+        retries: 10
     admin:
       properties:
-        bootstrap.servers: localhost:9092
+        bootstrap.servers: localhost:9092,localhost:9093,localhost:9094
+        retries: 10
+        retry.backoff.ms: 100000
+
+
 
 server:
   port: 8082

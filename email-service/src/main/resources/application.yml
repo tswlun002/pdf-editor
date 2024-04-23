@@ -17,17 +17,22 @@ spring:
     template:
       default-topic: download-document-event
     consumer:
-      bootstrap-server: localhost:9092
+      bootstrap-server: localhost:9092, localhost:9093, localhost:9094
       key-deserializer: "org.apache.kafka.common.serialization.StringDeserializer"
       value-deserializer: "org.apache.kafka.common.serialization.ByteArrayDeserializer"
       group-id: download-document-event-listener-group
     producer:
-      bootstrap-server: localhost:9092
+      bootstrap-server: localhost:9092,localhost:9093,localhost:9094
       key-serializer: "org.apache.kafka.common.serialization.StringSerializer"
       value-serializer: "org.apache.kafka.common.serialization.ByteArraySerializer"
     admin:
       properties:
-        bootstrap.servers: localhost:9092
+        bootstrap.servers: localhost:9092,localhost:9093,localhost:9094
+        max.in.flight.requests.per.connection: 1
+        acks: All
+        idempotence: true
+        delivery.timeout.ms: 1200000
+
 server:
   port: 8083
 mail:

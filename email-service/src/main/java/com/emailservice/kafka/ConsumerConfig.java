@@ -42,7 +42,7 @@ public class ConsumerConfig {
     ) {
         ConcurrentKafkaListenerContainerFactory<Object, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
         configure.configure(factory, kafkaConsumer.getIfAvailable(()->new DefaultKafkaConsumerFactory<>(this.kafkaProperties.buildConsumerProperties())));
-        factory.setConcurrency(2);
+        factory.setConcurrency(3);
         factory.setCommonErrorHandler(myErrorHandler());
 
         return factory;
