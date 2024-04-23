@@ -1,4 +1,4 @@
-version: '3.5'
+version: '2.1'
 
 services:
   mongodb:
@@ -12,7 +12,7 @@ services:
     volumes:
       - mongo-data:/data/db
     networks:
-      - db_net
+      - mongo-compose-network
 
   mongo-express:
     image: mongo-express
@@ -30,12 +30,10 @@ services:
     depends_on:
       - mongodb
     networks:
-      - db_net
+      - mongo-compose-network
 # Define named volumes
 volumes:
   mongo-data:
     driver: local
 networks:
-  db_net:
-    driver: bridge
-    name: db_network
+  mongo-compose-network:

@@ -14,24 +14,3 @@ docker exec --interactive --tty pdf-kafka-broker-1 \
 kafka-configs  --bootstrap-server pdf-kafka-broker-1:19092 --entity-type topics --entity-name  download-document-event \
 --alter --add-config min.insync.replicas=2
 ```
-
-## Refresh end-point after update app properties
-
-### When app run on cloud domain
-
-```angular2html
- http://pdf-editor/8071/monitor
-```
-### App runs on localhost
-#### Update user service
-```
- http://localhost:8080/actuator/refresh 
-```
-#### Update email service
-```
- http://localhost:8083/actuator/refresh 
-```
-#### Update document service
-```
- http://localhost:8082/actuator/refresh 
-```
