@@ -1,5 +1,6 @@
 package com.emailservice.email;
 
+import com.emailservice.exception.MailSenderException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,9 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.io.IOException;
-
 import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -24,13 +23,13 @@ import static org.springframework.http.HttpStatus.OK;
 public class EmailController {
     private final  EmailService emailService;
     @PostMapping(value = "/send",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?>  sendEmail(HttpServletRequest request) throws ServletException, IOException {
+    public ResponseEntity<?>  sendEmail(HttpServletRequest request) throws ServletException, IOException, MailSenderException {
 
         Part sendEmailRequest = request.getPart("email");
        Part pdfPart = request.getPart("pdf");
        if(sendEmailRequest==null) throw  new RuntimeException("Null email request");
        EmailRequest emailBody = new ObjectMapper().readValue(sendEmailRequest.getInputStream().readAllBytes(),EmailRequest.class);
-       return emailService.sendEmail(emailBody.recipient(),pdfPart)?
+       return emailService.sendEmail(emailBody.recipient(),pdfPart.getInputStream().readAllBytes())?
                new ResponseEntity<>("Edited pdf file is sent to your email",OK):
                new ResponseEntity<>("Failed to send pdf to email", NOT_ACCEPTABLE);
     }
