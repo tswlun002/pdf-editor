@@ -1,28 +1,12 @@
 spring:
   config:
     import: "optional:configserver:http://localhost:8071/"
-  application:
-    name: "documents"
-  kafka:
-    topics: git-configs
-    template:
-      default-topic: git-configs
-    consumer:
-      bootstrap-server: localhost:19095
-      key-deserializer: "org.apache.kafka.common.serialization.StringDeserializer"
-      value-deserializer: "org.apache.kafka.common.serialization.StringSerializer"
-      group-id: git-config-event-listener-group
-    #    producer:
-    #      bootstrap-server: localhost:9092,localhost:9093,localhost:9094
-    #      key-serializer: "org.apache.kafka.common.serialization.StringSerializer"
-    #      value-serializer: "org.apache.kafka.common.serialization.ByteArraySerializer"
-    admin:
-      properties:
-        bootstrap.servers: localhost:19095
-  #        max.in.flight.requests.per.connection: 1
-  #        acks: All
-  #        idempotence: true
-  #        delivery.timeout.ms: 1200000
+  profiles:
+    active: local
+
+topics:
+  download-document-name: download-document-event
+  configs: "git-configs"
 server:
   port: 8082
 management:
@@ -30,5 +14,31 @@ management:
     web:
       exposure:
         include: "*"
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  jackson:
+    parser:
+      allow-unquoted-field-names: true
+  application:
+    name: "documents"
+  kafka:
+    topic: download-document-event
+    template:
+      default-topic: download-document-event
+    producer:
+      bootstrap-server: localhost:9092, localhost:9093, localhost:9094
+      key-serializer: "org.apache.kafka.common.serialization.StringSerializer"
+      value-serializer: "org.apache.kafka.common.serialization.ByteArraySerializer"
+      properties:
+        retries: 10
+    admin:
+      properties:
+        bootstrap.servers: localhost:9092,localhost:9093,localhost:9094
+        retries: 10
+        retry.backoff.ms: 100000
+
 
 

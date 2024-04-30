@@ -1,35 +1,46 @@
 spring:
-  config:
-    import: "optional:configserver:http://localhost:8071/" #optional:file:.env[.properties]
-  application:
-    name: "email"
-  kafka:
-    topics: git-configs
-    template:
-      default-topic: git-configs
-    consumer:
-      bootstrap-server: localhost:19095
-      key-deserializer: "org.apache.kafka.common.serialization.StringDeserializer"
-      value-deserializer: "org.apache.kafka.common.serialization.StringSerializer"
-      group-id: git-config-event-listener-group
-#    producer:
-#      bootstrap-server: localhost:9092,localhost:9093,localhost:9094
-#      key-serializer: "org.apache.kafka.common.serialization.StringSerializer"
-#      value-serializer: "org.apache.kafka.common.serialization.ByteArraySerializer"
-    admin:
-      properties:
-        bootstrap.servers: localhost:19095
-#        max.in.flight.requests.per.connection: 1
-#        acks: All
-#        idempotence: true
-#        delivery.timeout.ms: 1200000
+  profiles:
+    active: local
+topics:
+  retry: "download-document-event.RETRY"
+  dead: "download-document-event.DEAD"
+  config: "git-configs"
 server:
-  port: 8081
+  port: 8083
 management:
   endpoints:
     web:
       exposure:
         include: "*"
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+    import: "optional:configserver:http://localhost:8071/" #optional:file:.env[.properties]
+  application:
+    name: "email"
+  kafka:
+    topic: download-document-event
+    template:
+      default-topic: download-document-event
+    consumer:
+      bootstrap-server: localhost:9092, localhost:9093, localhost:9094
+      key-deserializer: "org.apache.kafka.common.serialization.StringDeserializer"
+      value-deserializer: "org.apache.kafka.common.serialization.ByteArrayDeserializer"
+      group-id: download-document-event-listener-group
+    producer:
+      bootstrap-server: localhost:9092,localhost:9093,localhost:9094
+      key-serializer: "org.apache.kafka.common.serialization.StringSerializer"
+      value-serializer: "org.apache.kafka.common.serialization.ByteArraySerializer"
+    admin:
+      properties:
+        bootstrap.servers: localhost:9092,localhost:9093,localhost:9094
+        max.in.flight.requests.per.connection: 1
+        acks: All
+        idempotence: true
+        delivery.timeout.ms: 1200000
+
 
 
 
