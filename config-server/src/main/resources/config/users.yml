@@ -1,8 +1,8 @@
 spring:
   datasource:
     url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1;NON_KEYWORDS=USER;IGNORECASE=TRUE;DATABASE_TO_UPPER=false;
-    username: "{cipher}e12cb0b2084a81488936c19cbbb48a606ba04bc2aeed25b6b97b8c430b86f8c0"
-    password: "{cipher}e12cb0b2084a81488936c19cbbb48a606ba04bc2aeed25b6b97b8c430b86f8c0"
+    username: tour
+    password: tour
     driver-class-name: org.h2.Driver
   jpa:
     hibernate:

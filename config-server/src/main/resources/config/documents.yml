@@ -4,31 +4,8 @@ spring:
       allow-unquoted-field-names: true
   data:
     mongodb:
-      authentication-database: admin
+      uri: mongodb+srv://pdf_document:pdfdocument@document-service.ux4nj27.mongodb.net/?retryWrites=true&w=majority&appName=document-service
       database: documents
-      host: mongodb
-      port: 27017
-      username: document-service
-      password: "{cipher}b5699d56d531870962053f5e36108ebc37048fb51df332ac2522921a961693a5"
-  kafka:
-    topic: download-document-event
-    template:
-      default-topic: download-document-event
-    producer:
-      bootstrap-servers: pdfKafkaBroker1:9092, pdfKafkaBroker1:9093, pdfKafkaBroker3:9094
-      key-serializer: "org.apache.kafka.common.serialization.StringSerializer"
-      value-serializer: "org.apache.kafka.common.serialization.ByteArraySerializer"
-      properties:
-        retries: 10
-    admin:
-      properties:
-        bootstrap.servers: pdfKafkaBroker1:9092, pdfKafkaBroker1:9093, pdfKafkaBroker3:9094
-        retries: 10
-        retry.backoff.ms: 100000
 rest-template:
-  timeout: 500000
-  pool-size: 10
-download:
-  message:
-    successful: "Document is uploaded."
-    fail: "Failed to upload document."
+  timeout: 600000
+  pool-size: 5
