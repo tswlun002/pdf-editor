@@ -1,6 +1,44 @@
+spring:
+  cloud:
+    config:
+      enabled: true
+      uri: http://localhost:8071
+    stream:
+      kafka:
+        binder:
+          brokers: localhost:19091
+    bus:
+      trace:
+        enabled: true
+      refresh:
+        enabled: true
+      env:
+        enabled: true
+  kafka:
+    topic: download-document-event
+    template:
+      default-topic: download-document-event
+    consumer:
+      bootstrap-servers: localhost:19092,localhost:19093,localhost:19094
+      key-deserializer: "org.apache.kafka.common.serialization.StringDeserializer"
+      value-deserializer: "org.apache.kafka.common.serialization.ByteArrayDeserializer"
+      group-id: download-document-event-listener-group
+    producer:
+      bootstrap-servers: localhost:19092,localhost:19093,localhost:19094
+      key-serializer: "org.apache.kafka.common.serialization.StringSerializer"
+      value-serializer: "org.apache.kafka.common.serialization.ByteArraySerializer"
+    admin:
+      properties:
+        bootstrap.servers: localhost:19092,localhost:19093,localhost:19094
+        max.in.flight.requests.per.connection: 1
+        acks: All
+        idempotence: true
+        delivery.timeout.ms: 1200000
+
 mail:
   host: smtp.gmail.com
   protocol: smtp
   port: 587
-  username: ${EMAIL}
-  password: ${PASSWORD}
+  username: "{cipher}0ff55ad90bfb60ac8636705d9850195baf30f509f3ccbd8ac377e8a4138ca51220e0b36307ee08b00c60bbe0aca4464c"
+  password: "{cipher}316ef13864572b8e170bc4c51b3f2be7e1fd5ac1fba877b22671d55cf181573310dab352e639530f1a16d81f1df365c0"
+

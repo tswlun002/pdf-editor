@@ -6,6 +6,7 @@ import com.documentservice.exception.InvalidDocument;
 import com.itextpdf.text.DocumentException;
 import jakarta.validation.constraints.Email;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,8 @@ import static org.springframework.http.HttpStatus.OK;
 public class PDFController {
     private  final IPDF service;
     private  final EmailService emailService;
+    private final Environment env;
+
 
     @PostMapping("save")
     public ResponseEntity<?> saveDocument(@RequestParam @Email(message = "Email must be valid email address")
@@ -26,7 +29,8 @@ public class PDFController {
         var pdf = GeneratePDF.generatePdfStream();
         var name =email.substring(0, email.indexOf("@"));
         var save= service.saveDocument(new UserDocument(email,pdf.toByteArray(),name+"_file_" ));
-        return  new ResponseEntity<>(save?"Document is uploaded":"Failed to upload document",save?OK:NOT_ACCEPTABLE);
+        return  new ResponseEntity<>(save?env.getProperty("download.message.successful"):
+                env.getProperty("download.message.fail"),save?OK:NOT_ACCEPTABLE);
     }
     @GetMapping("download/{email}/{id}")
     public  ResponseEntity<?> downloadDocument(@PathVariable("email") String email,@PathVariable("id")String id){
