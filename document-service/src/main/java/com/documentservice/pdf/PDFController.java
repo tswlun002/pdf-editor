@@ -6,6 +6,7 @@ import com.documentservice.exception.InvalidDocument;
 import com.itextpdf.text.DocumentException;
 import jakarta.validation.constraints.Email;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;

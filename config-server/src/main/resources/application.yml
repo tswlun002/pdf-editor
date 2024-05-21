@@ -1,0 +1,63 @@
+spring:
+  application:
+    name: "configserver"
+  profiles:
+    active: git  #native
+  cloud:
+    config:
+      server:
+        git:
+          uri: "https://github.com/tswlun002/pdf-editor-configs.git"
+        #native:
+          #search-locations: "classpath:/config"
+          default-label: main
+          timeout: 10
+          clone-on-start: true
+          force-pull: true
+          refresh-rate: 1
+    bus:
+      enabled: true
+    stream:
+      binding-retry-interval: 60
+      kafka:
+        binder:
+          brokers: "configBroker:9091"
+          replicationFactor: 1
+          auto-create-topics: true
+          kafka-properties:
+            - key-serializer: "org.apache.kafka.common.serialization.StringSerializer"
+            - value-serializer: "org.apache.kafka.common.serialization.StringSerializer"
+            - key-deserializer: "org.apache.kafka.common.serialization.StringDeserializer"
+            - value-deserializer: "org.apache.kafka.common.serialization.StringDeserializer"
+  kafka:
+    bootstrap-servers: "configBroker:9091"
+    producer:
+      key-serializer: "org.apache.kafka.common.serialization.StringSerializer"
+      value-serializer: "org.apache.kafka.common.serialization.ByteArraySerializer"
+      properties:
+        topic:
+          replication-factor: 1
+    consumer:
+      key-deserializer: "org.apache.kafka.common.serialization.StringDeserializer"
+      value-deserializer: "org.apache.kafka.common.serialization.ByteArrayDeserializer"
+      properties:
+        topic:
+          replication-factor: 1
+    admin:
+      properties:
+        topic:
+          replication-factor: 1
+
+
+server:
+  port: 8071
+encrypt:
+  key: 7E93D539EAA5C42F8523AB1627D1B
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+
+
