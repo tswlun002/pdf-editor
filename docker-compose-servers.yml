@@ -15,33 +15,6 @@ services:
       - server_net
 
 
-  #Discovery SERVER CONTAINER
-  discoveryServerApp:
-    build:
-      context: ./discovery-server
-    image: pdf_editor_discover:latest
-    container_name: discoveryServerApp
-    ports:
-      - "8070:8070"
-    depends_on:
-      - configServerApp
-    networks:
-      - server_net
-
-  # Gateway SERVER CONTAINER
-  gatewayServerApp:
-    build:
-      context: ./gateway-server
-    image: pdf-editor-gateway:latest
-    container_name: gatewayServerApp
-    ports:
-      - "8072:8072"
-    depends_on:
-      - configServerApp
-      - discoveryServerApp
-    networks:
-      - server_net
-      - db_doc_net
   # DOCUMENTS SERVER CONTAINER
   documentsServerApp:
     build:
@@ -52,7 +25,6 @@ services:
       - "8082:8082"
     depends_on:
       - configServerApp
-      - discoveryServerApp
       - mongodb
     networks:
       - server_net
@@ -68,7 +40,6 @@ services:
       - "8083:8083"
     depends_on:
       - configServerApp
-      - discoveryServerApp
     networks:
       - server_net
 
@@ -83,7 +54,6 @@ services:
       - "8080:8080"
     depends_on:
       - configServerApp
-      - discoveryServerApp
     networks:
       - server_net
 networks:
