@@ -1,23 +1,27 @@
 run:
-	docker-compose -f docker-compose-hook.yml   up  -d;
-	docker-compose -f docker-compose-db.yml up  -d;
-	docker-compose -f docker-compose-kafka.yml up -d;
+	docker-compose -f docker-compose-kafka.yml up -d --build;
+	docker-compose -f docker-compose-servers.yml up -d --build;
 stop-iternal-services:
 	systemctl stop mongod.service
 	systemctl stop mysql.service
-run-hooks:
-	docker-compose -f docker-compose-hook.yml   up  -d
-	echo "DO NOT FORGET TO SET UP LISTENING PORT AND PATH FOR WEB HOOK!!!!!"
 run-brokers:
-	docker-compose -f docker-compose-kafka.yml up  --build --force-recreate  -d
+	docker-compose -f docker-compose-kafka.yml up  --build   -d
 run-broker-1:
-	docker-compose -f docker-compose-kafka.yml up  --build --force-recreate pdf-kafka-broker-1 -d
+	docker-compose -f docker-compose-kafka.yml up  --build  pdf-kafka-broker-1 -d
 run-broker-2:
-	docker-compose -f docker-compose-kafka.yml up  --build --force-recreate pdf-kafka-broker-2 -d
+	docker-compose -f docker-compose-kafka.yml up  --build pdf-kafka-broker-2 -d
 run-broker-3:
 	docker-compose -f docker-compose-kafka.yml up	pdf-kafka-broker-3	-d
 run-config-broker:
-	docker-compose -f docker-compose-kafka.yml up  --build --force-recreate config-broker -d
+	docker-compose -f docker-compose-kafka.yml up  --build  config-broker -d
+run-config-server:
+	docker-compose -f docker-compose-servers.yml up --build configServerApp -d
+run-document-app:
+	docker-compose -f docker-compose-servers.yml up --build documentsServerApp -d
+run-email-app:
+	docker-compose -f docker-compose-servers.yml up --build emailServerApp -d
+run-user-app:
+	docker-compose -f docker-compose-servers.yml up --build usersServerApp -d
 down-config-broker:
 	docker-compose -f docker-compose-kafka.yml down  config-broker
 down-brokers:
