@@ -15,7 +15,7 @@ import java.util.Arrays;
 @Component
 public class DownloadEventConsumer {
     private final EmailService service;
-    private final Environment env;
+
 
    @KafkaListener(topics = {"download-document-event"},groupId = "download-document-event-listener-group")
     public void onDownloadDocument(ConsumerRecord<String, byte[]> consumerRecord) throws MailSenderException {
@@ -24,10 +24,9 @@ public class DownloadEventConsumer {
      log.info("Download document event listener was successful, data:{}",email+ Arrays.toString(file));
      var sent = service.sendEmail(email,file);
      if(!sent){
-         var message = env.getProperty("download.message.fail");
-         log.error(message);
-         throw  new InternalError(message);
+         log.error("Internal server error.");
+         throw  new InternalError("Internal server error.");
      }
-     log.info(env.getProperty("download.message.successful"));
+     log.info("Document sent successfully to your email");
    }
 }
