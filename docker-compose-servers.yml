@@ -1,0 +1,66 @@
+version: '3.5'
+
+include:
+  - docker-compose-db.yml
+services:
+  #CONFIG SERVER CONTAINER
+  configServerApp:
+    build:
+      context: ./config-server
+    image: pdf_editor_config:latest
+    container_name: configServerApp
+    ports:
+      - "8071:8071"
+    networks:
+      - server_net
+
+
+  # DOCUMENTS SERVER CONTAINER
+  documentsServerApp:
+    build:
+      context: ./document-service
+    image: pdf-editor-document:latest
+    container_name: documentsServerApp
+    ports:
+      - "8082:8082"
+    depends_on:
+      - configServerApp
+      - mongodb
+    networks:
+      - server_net
+      - db_doc_net
+
+  # EMAIL SERVER CONTAINER
+  emailServerApp:
+    build:
+      context: ./email-service
+    image: pdf-editor-email:latest
+    container_name:  emailServerApp
+    ports:
+      - "8083:8083"
+    depends_on:
+      - configServerApp
+    networks:
+      - server_net
+
+  # USER SERVER CONTAINER
+  usersServerApp:
+    build:
+      context: ./user-service
+    image: pdf-editor-user:latest
+    container_name: usersServerApp
+    hostname: usersServerApp
+    ports:
+      - "8080:8080"
+    depends_on:
+      - configServerApp
+    networks:
+      - server_net
+networks:
+  server_net:
+    external: true
+    name: kafka_network
+  db_doc_net:
+    external: true
+    name: db_network
+
