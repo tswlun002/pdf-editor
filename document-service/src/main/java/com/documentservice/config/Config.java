@@ -1,7 +1,5 @@
 package com.documentservice.config;
 
-import com.documentservice.exception.CustomErrorDecoder;
-import feign.codec.ErrorDecoder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
@@ -44,10 +42,7 @@ public class Config {
        requestFactory.setConnectTimeout(TIME_OUT);
         return new RestTemplate(requestFactory);
     }
-    @Bean
-    public ErrorDecoder errorDecoder() {
-        return new CustomErrorDecoder();
-    }
+
     @Bean
     ModelMapper modelMapper(){
         return  new ModelMapper();

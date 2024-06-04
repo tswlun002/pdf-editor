@@ -2,10 +2,10 @@ package com.documentservice.user;
 
 import com.documentservice.exception.InvalidUser;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-@Slf4j
+
 @Service
 @AllArgsConstructor
 public class UserImpl implements User {
@@ -14,6 +14,7 @@ public class UserImpl implements User {
     @Override
     public UserDto getUser(String username) throws InvalidUser {
         var userResponse = userApi.getUser(username);
+        if(userResponse.getStatusCode()!= HttpStatus.OK) throw new InvalidUser("Invalid user was given\n");
         return mapper.map(userResponse.getBody(), UserDto.class);
     }
 }
