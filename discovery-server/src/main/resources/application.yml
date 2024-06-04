@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: discoveryserver
+  config:
+    import: "configserver:http://configServerApp:8071/"
+  cloud:
+    config:
+      enabled: true
+      uri: "http://configServerApp:8071"
+    stream:
+      kafka:
+        binder:
+          brokers: configBroker:9091
+    bus:
+      trace:
+        enabled: true
+      refresh:
+        enabled: true
+      env:
+        enabled: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

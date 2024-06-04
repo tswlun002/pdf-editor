@@ -20,6 +20,7 @@
         <module>email-service</module>
         <module>document-service</module>
         <module>config-server</module>
+        <module>discovery-server</module>
     </modules>
     <properties>
         <java.version>17</java.version>

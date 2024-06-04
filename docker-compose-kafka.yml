@@ -91,21 +91,6 @@ services:
     networks:
       - zookeeper_net
       - kafka_net
-
-#  # Config server
-#  configServerApp:
-#    build:
-#      context: ./config-server
-#    image: pdf_editor_config:latest
-#    container_name: configServerApp
-#    hostname: configServerApp
-#    ports:
-#      - "8071:8071"
-#    depends_on:
-#      - configBroker
-#    networks:
-#      - kafka_net
-#      - server_net
 networks:
   zookeeper_net:
   kafka_net:
