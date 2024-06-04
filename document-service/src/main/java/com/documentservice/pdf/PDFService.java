@@ -2,6 +2,8 @@ package com.documentservice.pdf;
 
 import com.documentservice.exception.InternalServerError;
 import com.documentservice.exception.InvalidDocument;
+import com.documentservice.exception.InvalidUser;
+import com.documentservice.user.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,13 +16,16 @@ import java.util.Optional;
 @Slf4j
 public class PDFService implements IPDF{
     private final   PDFRepository repository;
-    @Override
-    public boolean saveDocument(UserDocument userDocument) throws InvalidDocument {
-        if(userDocument==null)throw new InvalidDocument("Document try to save is invalid");
+    private final User user;
 
+    @Override
+    public boolean saveDocument(UserDocument userDocument) throws InvalidDocument, InvalidUser {
+        if(userDocument==null)throw new InvalidDocument("Document try to save is invalid");
+        var userDto = user.getUser(userDocument.email());
         var isSaved =false;
         try{
-            var doc = repository.findByEmail(userDocument.email())
+
+            var doc = repository.findByEmail(userDto.getEmail())
                     .stream().filter(d->d.getName().equals(userDocument.name()))
                     .toList();
 
