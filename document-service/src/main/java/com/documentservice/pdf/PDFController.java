@@ -3,13 +3,14 @@ package com.documentservice.pdf;
 import com.documentservice.email.EmailService;
 import com.documentservice.exception.EntityNotFoundException;
 import com.documentservice.exception.InvalidDocument;
+import com.documentservice.exception.InvalidUser;
 import com.itextpdf.text.DocumentException;
 import jakarta.validation.constraints.Email;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
 import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -23,7 +24,7 @@ public class PDFController {
 
     @PostMapping("save")
     public ResponseEntity<?> saveDocument(@RequestParam @Email(message = "Email must be valid email address")
-                                              String email) throws InvalidDocument, DocumentException {
+                                              String email) throws InvalidDocument, DocumentException, InvalidUser {
         var pdf = GeneratePDF.generatePdfStream();
         var name =email.substring(0, email.indexOf("@"));
         var save= service.saveDocument(new UserDocument(email,pdf.toByteArray(),name+"_file_" ));
