@@ -2,14 +2,14 @@ spring:
   application:
     name: "configserver"
   profiles:
-    active: git  #native
+    active: native #git
   cloud:
     config:
       server:
-        git:
-          uri: "https://github.com/tswlun002/pdf-editor-configs.git"
-        #native:
-          #search-locations: "classpath:/config"
+#        git:
+#          uri: "https://github.com/tswlun002/pdf-editor-configs.git"
+        native:
+          search-locations: "classpath:/config"
           default-label: main
           timeout: 10
           clone-on-start: true
