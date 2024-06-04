@@ -1,0 +1,10 @@
+server:
+  port: 8070
+eureka:
+  instance:
+    hostname: discoveryServerApp
+  client:
+    fetch-registry: false
+    register-with-eureka: false
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
