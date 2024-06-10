@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/pdf-editor/user")
+@RequestMapping("/pdf-editor/users")
 @Validated
 public class UserController {
     private  final IUser userService;
