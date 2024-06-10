@@ -2,10 +2,11 @@
 name: config server server CI/CD
 
 on:
-  push:
-    paths:
-      - "config-server/**"
-    branches: [ "master" ]
+  workflow_dispatch:
+#  push:
+#    paths:
+#      - "config-server/**"
+#    branches: [ "master" ]
 jobs:
   server:
     name: Job for 'config-server' folder
