@@ -18,7 +18,7 @@ import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("pdf-editor/email")
+@RequestMapping("pdf-editor/emails")
 @Validated
 public class EmailController {
     private final  EmailService emailService;
