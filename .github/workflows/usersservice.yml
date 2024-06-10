@@ -1,5 +1,5 @@
 
-name: user server CI/CD
+name: server CI/CD
 
 on:
   push:
