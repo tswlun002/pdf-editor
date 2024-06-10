@@ -2,11 +2,10 @@
 name: config server server CI/CD
 
 on:
-  workflow_dispatch:
-#  push:
-#    paths:
-#      - "config-server/**"
-#    branches: [ "master" ]
+  push:
+    paths:
+      - "config-server/**"
+    branches: [ "master" ]
 jobs:
   server:
     name: Job for 'config-server' folder
@@ -24,7 +23,7 @@ jobs:
       - name: install back-end
         run: mvn -B  install --file config-server/pom.xml
       - name: build  document service image
-        run: docker compose -f docker-compose-servers.yml build  configServerApp
+        run: docker compose -f docker-compose-servers.yml build  config_server
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
@@ -32,5 +31,5 @@ jobs:
           password: ${{secrets.DOCKERHUB_PASSWORD}}
       - name: push to Docker Hub
         run: |
-          docker tag pdf_editor_config:latest ${{secrets.DOCKERHUB_USERNAME}}/pdf-editor:config_server
+          docker tag config_server ${{secrets.DOCKERHUB_USERNAME}}/pdf-editor:config_server
           docker push ${{secrets.DOCKERHUB_USERNAME}}/pdf-editor:config_server
