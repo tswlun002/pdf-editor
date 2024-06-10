@@ -28,7 +28,20 @@ services:
     networks:
       - server_net
 
-
+  # Gateway SERVER CONTAINER
+  gatewayServerApp:
+    build:
+      context: ./gateway-server
+    image: pdf-editor-gateway:latest
+    container_name: gatewayServerApp
+    ports:
+      - "8072:8072"
+    depends_on:
+      - configServerApp
+      - discoveryServerApp
+    networks:
+      - server_net
+      - db_doc_net
   # DOCUMENTS SERVER CONTAINER
   documentsServerApp:
     build:

@@ -6,8 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient("users")
+@FeignClient("gatewayserver")
 public interface UserApi {
-    @GetMapping(value = "/pdf-editor/user/{username}")
+    @GetMapping(value = "/pdf-editor/users/{username}")
      ResponseEntity<UserDto> getUser(@PathVariable("username") String username) throws InvalidUser;
 }
