@@ -2,10 +2,11 @@
 name: discovery server server CI/CD
 
 on:
-  push:
-    paths:
-      - "discovery-server/**"
-    branches: [ "master" ]
+  workflow_dispatch:
+  # push:
+  #   paths:
+  #     - "discovery-server/**"
+  #   branches: [ "master" ]
 jobs:
   server:
     name: Job for 'discovery-server' folder
@@ -23,7 +24,7 @@ jobs:
       - name: install back-end
         run: mvn -B  install --file discovery-server/pom.xml
       - name: build  document service image
-        run: docker compose -f docker-compose-servers.yml  build  discovery_server
+        run: docker compose -f docker-compose-servers.yml  build  discoveryServerApp
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
@@ -31,5 +32,5 @@ jobs:
           password: ${{secrets.DOCKERHUB_PASSWORD}}
       - name: push to Docker Hub
         run: |
-          docker tag discovery_server ${{secrets.DOCKERHUB_USERNAME}}/pdf-editor:discovery_server
-          docker push ${{secrets.DOCKERHUB_USERNAME}}/pdf-editor:discovery_server
+          docker tag pdf_editor_discover:latest ${{secrets.DOCKERHUB_USERNAME}}/pdf-editor:discovery_servery
+          docker push ${{secrets.DOCKERHUB_USERNAME}}/pdf-editor:discovery_servery
