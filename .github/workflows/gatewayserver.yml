@@ -22,9 +22,9 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: install back-end
-        run: mvn -B  install -f gateway-server/pom.xml -DskipTests
+        run: mvn -B  install --file gateway-server/pom.xml -DskipTests
       - name: build  document service image
-        run: docker compose -file docker-compose-servers.yml build  gatewayServerApp
+        run: docker compose -f docker-compose-servers.yml build  gatewayServerApp
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
