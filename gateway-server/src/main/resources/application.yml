@@ -1,0 +1,53 @@
+spring:
+  application:
+    name: "gatewayserver"
+  config:
+    import: "configserver:http://configServerApp:8071/"
+  cloud:
+    config:
+      enabled: true
+      uri: http://configServerApp:8071
+    stream:
+      kafka:
+        binder:
+          brokers: "configBroker:9091"
+    bus:
+      trace:
+        enabled: true
+      refresh:
+        enabled: true
+      env:
+        enabled: true
+    gateway:
+      discovery:
+        locator:
+          enabled: false
+          lower-case-service-id: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    gateway:
+      enabled: true
+  info:
+    env:
+      enabled: true
+eureka:
+  instance:
+    hostname: discoveryServerApp
+    preferIpAddress: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:8070/eureka/
+    healthcheck:
+      enabled: true
+info:
+  app:
+    version: 1.0.0
+    description: "Service to manage routes requests and response from external services"
+
+
