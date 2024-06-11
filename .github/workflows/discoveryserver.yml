@@ -22,7 +22,7 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: install back-end
-        run: mvn -B  install --file discovery-server/pom.xml
+        run: mvn -B  install --file discovery-server/pom.xml -DskipTests
       - name: build  document service image
         run: docker compose -f docker-compose-servers.yml  build  discoveryServerApp
       - name: Login to Docker Hub

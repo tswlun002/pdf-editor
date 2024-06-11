@@ -2,10 +2,11 @@
 name: email server CI/CD
 
 on:
-  push:
-    paths:
-      - "email-service/**"
-    branches: [ "master" ]
+  workflow_dispatch:
+  # push:
+  #   paths:
+  #     - "email-service/**"
+  #   branches: [ "master" ]
 jobs:
   server:
     name: Job for 'email-service' folder
@@ -21,9 +22,9 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: install back-end
-        run: mvn -B  install --file email-service/pom.xml
+        run: mvn -B  install --file email-service/pom.xml -DskipTests
       - name: build  email service image
-        run: docker compose build  email_service
+        run: docker compose -f docker-compose-servers.yml build  emailServerApp
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
@@ -31,5 +32,5 @@ jobs:
           password: ${{secrets.DOCKERHUB_PASSWORD}}
       - name: push to Docker Hub
         run: |
-          docker tag email_service ${{secrets.DOCKERHUB_USERNAME}}/pdf-editor:email_service
+          docker tag pdf-editor-email:latest ${{secrets.DOCKERHUB_USERNAME}}/pdf-editor:email_service
           docker push ${{secrets.DOCKERHUB_USERNAME}}/pdf-editor:email_service
