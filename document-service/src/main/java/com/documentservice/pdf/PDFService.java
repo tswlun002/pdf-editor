@@ -5,7 +5,8 @@ import com.documentservice.exception.InvalidDocument;
 import com.documentservice.exception.InvalidUser;
 import com.documentservice.user.User;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,15 +14,18 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-@Slf4j
 public class PDFService implements IPDF{
     private final   PDFRepository repository;
     private final User user;
+    private static final Logger logger= LoggerFactory.getLogger(PDFService.class);
 
     @Override
-    public boolean saveDocument(UserDocument userDocument) throws InvalidDocument, InvalidUser {
-        if(userDocument==null)throw new InvalidDocument("Document try to save is invalid");
-        var userDto = user.getUser(userDocument.email());
+    public boolean saveDocument(String traceId,UserDocument userDocument) throws InvalidDocument, InvalidUser {
+        if(userDocument==null){
+            logger.error("Document try to save is invalid. traceId: {}, userDocument: {}", traceId,null);
+            throw new InvalidDocument("Document try to save is invalid.");
+        }
+        var userDto = user.getUser(traceId,userDocument.email());
         var isSaved =false;
         try{
 
@@ -33,9 +37,10 @@ public class PDFService implements IPDF{
                     doc.isEmpty()?userDocument.name():userDocument.name()+(doc.size()+1)+"_").build();
             repository.save(pdf);
             isSaved=true;
+            logger.info("PDFService saveDocument, traceId: {}, userDocument: {}", traceId, userDocument);
         }
         catch (Exception e){
-            log.info("\nInternal error:\n{},{}",e.getMessage(),e.getCause().toString());
+            logger.error("trace-Id: {}\nInternal error:\n{},{}",traceId,e.getMessage(),e.getCause().toString());
             throw new InternalServerError("Internal server error");
         }
         return isSaved ;

@@ -12,13 +12,15 @@ run-broker-2:
 	docker-compose -f docker-compose-kafka.yml up  --build pdf-kafka-broker-2 -d
 run-broker-3:
 	docker-compose -f docker-compose-kafka.yml up	pdf-kafka-broker-3	-d
-run-config-broker:
+config-broker:
 	docker-compose -f docker-compose-kafka.yml up  --build  config-broker -d
-run-config-server:
+config-server:
 	docker-compose -f docker-compose-servers.yml up --build configServerApp -d
-run-document-app:
+gateway-server:
+	docker compose -f docker-compose-servers.yml up --build gatewayServerApp -d
+document-app:
 	docker-compose -f docker-compose-servers.yml up --build documentsServerApp -d
-run-email-app:
+email-app:
 	docker-compose -f docker-compose-servers.yml up --build emailServerApp -d
 run-user-app:
 	docker-compose -f docker-compose-servers.yml up --build usersServerApp -d

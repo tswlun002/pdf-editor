@@ -9,6 +9,6 @@ import java.util.Optional;
 @Validated
 public interface IUser {
 
-    boolean createUser(@Valid UserRegister userRegister) ;
-    Optional<User> findUserByEmail(String email);
+    boolean createUser(String traceId,@Valid UserRegister userRegister) ;
+    Optional<User> findUserByEmail(String traceId,String email);
 }

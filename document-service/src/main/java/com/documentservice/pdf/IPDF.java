@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface IPDF {
 
-    boolean saveDocument(UserDocument userDocument) throws InvalidDocument, InvalidUser;
+    boolean saveDocument(String traceId,UserDocument userDocument) throws InvalidDocument, InvalidUser;
     DocumentResponse updateDocument(String email);
 
     Optional<PDF> findByIdAndEmail(String id, String email);
