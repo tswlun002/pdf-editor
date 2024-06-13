@@ -7,6 +7,8 @@ import com.documentservice.pdf.PDF;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -16,18 +18,19 @@ import org.springframework.validation.annotation.Validated;
 @Service
 public class EmailService implements  IEmail {
     private final DownloadEventProducer producer;
+    private static  final Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
 
 
     @Override
-    public boolean sendEmail(PDF pdf) {
-        return getResponse(pdf);
+    public boolean sendEmail(String traceId,PDF pdf) {
+        return getResponse(traceId,pdf);
     }
-    private @Valid Boolean getResponse(PDF pdf) {
+    private @Valid Boolean getResponse(String traceId,PDF pdf) {
       var response=false;
         try {
-            response=producer.sendDownloadEvent(new DownLoadDocumentEvent(pdf.getEmail(), pdf.getImage()));
+            response=producer.sendDownloadEvent(new DownLoadDocumentEvent(traceId,pdf.getEmail(), pdf.getImage()));
         } catch (Exception e) {
-                log.info("Error:-----------> message:{},status code:{}", e.getMessage(),500,e);
+                LOGGER.error("Internal server error. Trace-Id: {}", traceId,e);
                 throw new InternalServerError("Internal server error.");
         }
         return response;

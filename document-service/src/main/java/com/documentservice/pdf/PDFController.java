@@ -36,11 +36,14 @@ public class PDFController {
     }
     @GetMapping("download/{email}/{id}")
     public  ResponseEntity<?> downloadDocument(@RequestHeader("trace-Id") String traceId,@PathVariable("email") String email,@PathVariable("id")String id){
-        log(traceId);
+        logger.info("Download document for email: {}, traceId: {}",email,traceId);
         var doc=service.findByIdAndEmail(id,email).orElseThrow(
-                ()->new EntityNotFoundException("Document is not found")
+                ()->{
+                    logger.error("Document not found for email: {}, traceId: {}",email,traceId);
+                    return new EntityNotFoundException("Document is not found.");
+                }
         );
-        var isSent=emailService.sendEmail(doc);
+        var isSent=emailService.sendEmail(traceId,doc);
         return  new ResponseEntity<>(isSent?"Document is sent to email.":"Failed to download document, please try again."
                 ,isSent?OK:NOT_ACCEPTABLE);
 
