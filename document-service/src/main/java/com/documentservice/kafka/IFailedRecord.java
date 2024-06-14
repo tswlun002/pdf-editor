@@ -4,7 +4,7 @@ import  java.util.Set;
 @Service
 public interface IFailedRecord {
 
-    void saveRecord(String key, Throwable throwable,  byte[] value, String topic, RecordStatus recordStatus,String id);
+    void saveRecord(String traceId,String key, Throwable throwable,  byte[] value, String topic, RecordStatus recordStatus,String id);
 
     Set<FailedRecord> findAllByStatus(RecordStatus recordStatus);
 

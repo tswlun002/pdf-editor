@@ -5,5 +5,5 @@ import org.springframework.stereotype.Service;
 @Service("doc-email")
 public interface IEmail {
 
-    boolean sendEmail(PDF doc);
+    boolean sendEmail(String traceId,PDF doc);
 }

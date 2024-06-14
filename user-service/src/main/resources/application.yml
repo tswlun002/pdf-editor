@@ -47,6 +47,13 @@ eureka:
 endpoints:
   shutdown:
     enabled: true
+logging:
+  level:
+    com:
+      userservice:
+        - DEBUG
+        - INFO
+        - ERROR
 info:
   app:
     version: 1.0.0

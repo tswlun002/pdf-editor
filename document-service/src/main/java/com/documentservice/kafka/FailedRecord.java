@@ -26,6 +26,7 @@ public class FailedRecord {
     private  byte[] value;
     private  String topic;
     private  String exception;
+    private String traceId;
     @Enumerated(EnumType.STRING)
     private  RecordStatus status;
     private LocalDateTime timestamp;
@@ -38,13 +39,14 @@ public class FailedRecord {
                 && Objects.equals(getKey(), record.getKey()) && Arrays.equals(getValue(), record.getValue())
                 && Objects.equals(getException(), record.getException())
                 && getStatus() == record.getStatus() && Objects.equals(getTimestamp(), record.getTimestamp())
+                && Objects.equals(getTraceId(),record.getTraceId())
                 ;
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(getId(), getTopic(), getKey(), Arrays.hashCode(getValue()),
-                getException(), getStatus(), getTimestamp());
+                getException(), getStatus(), getTimestamp(),getTraceId());
     }
 
     @Override
@@ -57,6 +59,7 @@ public class FailedRecord {
                 ", exception='" + exception + '\'' +
                 ", recordStatus=" + status +
                 ", timestamp=" + timestamp +
+                ", traceId="+ traceId +
                 '}';
     }
 }
