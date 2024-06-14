@@ -17,7 +17,7 @@ import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@RequestMapping(value = "pdf-editor/documents/")
+@RequestMapping( "pdf-editor/documents/")
 @RequiredArgsConstructor
 @Validated
 public class PDFController {
@@ -35,7 +35,8 @@ public class PDFController {
         return  new ResponseEntity<>(save?"Document is uploaded":"Failed to upload document",save?OK:NOT_ACCEPTABLE);
     }
     @GetMapping("download/{email}/{id}")
-    public  ResponseEntity<?> downloadDocument(@RequestHeader("trace-Id") String traceId,@PathVariable("email") String email,@PathVariable("id")String id){
+    public  ResponseEntity<?> downloadDocument(@RequestHeader("trace-Id") String traceId,@PathVariable("email")
+    @Email(message = "Email must be valid email address")String email,@PathVariable("id")String id){
         logger.info("Download document for email: {}, traceId: {}",email,traceId);
         var doc=service.findByIdAndEmail(id,email).orElseThrow(
                 ()->{
@@ -50,7 +51,8 @@ public class PDFController {
     }
 
     @GetMapping("{email}")
-    public  ResponseEntity<?> downloadDocument(@RequestHeader("trace-Id") String traceId,@PathVariable("email") String email){
+    public  ResponseEntity<?> downloadDocument(@RequestHeader("trace-Id") String traceId,@PathVariable("email")
+    @Email(message = "Email must be valid email address")String email){
         log(traceId);
         var docs=service.findByEmail(email)
         ;

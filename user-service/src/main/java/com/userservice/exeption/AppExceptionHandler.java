@@ -1,5 +1,6 @@
 package com.userservice.exeption;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import lombok.NonNull;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -34,15 +36,14 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
                 .toList()
         );
         var exc = AppException.builder()
-                .statusCode(status.value())
+                .status(status.value())
                 .statusCodeMessage(HttpStatus.METHOD_NOT_ALLOWED.name())
                 .message(message).
-                path(request.getContextPath())
-                .time(LocalDateTime.now())
+                path(((ServletWebRequest)request).getRequest().getRequestURI())
+                .timestamp(LocalDateTime.now().toString())
                 .build();
-        var statusCode = HttpStatus.METHOD_NOT_ALLOWED;
-        logger.error("Method argument not valid exception: {},HttpStatus: {}, trace-Id: {} ", exc,statusCode,headers.get("trace-Id"));
-        return response.apply(exc, statusCode);
+        logger.error("Method argument not valid exception: {},HttpStatus: {}, trace-Id: {} ", exc,status,headers.get("trace-Id"));
+        return response.apply(exc, (HttpStatus) status);
     }
     @ExceptionHandler({ConstraintViolationException.class})
     public  ResponseEntity<?> constrainsFailed(ConstraintViolationException exception, WebRequest request){
@@ -52,14 +53,14 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
                 .toList()
         );
         var exc = AppException.builder()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .status(HttpStatus.BAD_REQUEST.value())
                 .statusCodeMessage(HttpStatus.BAD_REQUEST.name())
                 .message(message).
-                path(request.getContextPath())
-                .time(LocalDateTime.now())
+                path(((ServletWebRequest)request).getRequest().getRequestURI())
+                .timestamp(LocalDateTime.now().toString())
                 .build();
-        var statusCode = HttpStatus.BAD_REQUEST;
-        logger.error("Field not valid exception: {},HttpStatus: {}, trace-Id: {} ", exc,statusCode,request.getHeader("trace-Id"));
+        var status = HttpStatus.BAD_REQUEST;
+        logger.error("Field not valid exception: {},HttpStatus: {}, trace-Id: {} ", exc,status,request.getHeader("trace-Id"));
         return response.apply(exc, HttpStatus.BAD_REQUEST);
     }
     @Override
@@ -69,27 +70,26 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
                                                                          @NonNull WebRequest request) {
 
         var exc = AppException.builder()
-                .statusCode(status.value())
+                .status(status.value())
                 .statusCodeMessage(HttpStatus.METHOD_NOT_ALLOWED.name())
                 .message(ex.getMessage()).
-                path(request.getContextPath())
-                .time(LocalDateTime.now())
+                path(((ServletWebRequest)request).getRequest().getRequestURI())
+                .timestamp(LocalDateTime.now().toString())
                 .build();
-        var statusCode = HttpStatus.BAD_REQUEST;
-        logger.error("Method not supported exception: {},HttpStatus: {} , trace-Id: {} ", exc,statusCode,request.getHeader("trace-Id"));
-        return  response.apply(exc, HttpStatus.METHOD_NOT_ALLOWED);
+        logger.error("Method not supported exception: {},HttpStatus: {} , trace-Id: {} ", exc,status,request.getHeader("trace-Id"));
+        return  response.apply(exc, (HttpStatus) status);
     }
    @ExceptionHandler({Exception.class})
     public  ResponseEntity<?> InternalException(Exception exception, WebRequest request){
        var exc = AppException.builder()
-               .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
+               .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
                .statusCodeMessage(HttpStatus.INTERNAL_SERVER_ERROR.name())
                .message(exception.getMessage()).
-               path(request.getContextPath())
-               .time(LocalDateTime.now())
+               path(((ServletWebRequest)request).getRequest().getRequestURI())
+               .timestamp(LocalDateTime.now().toString())
                .build();
-       var statusCode = HttpStatus.BAD_REQUEST;
-       logger.error("Internal server exception exception: {},HttpStatus: {} , trace-Id: {} ", exc,statusCode,request.getHeader("trace-Id"));
+       var status = HttpStatus.BAD_REQUEST;
+       logger.error("Internal server exception exception: {},HttpStatus: {} , trace-Id: {} ", exc,status,request.getHeader("trace-Id"));
        return  response.apply(exc, HttpStatus.INTERNAL_SERVER_ERROR);
 
    }
@@ -98,41 +98,41 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
     public  ResponseEntity<?> userNotFound(EntityNotFoundException exception
     ,WebRequest request){
         var exc = AppException.builder()
-                .statusCode(HttpStatus.NOT_FOUND.value())
+                .status(HttpStatus.NOT_FOUND.value())
                 .statusCodeMessage(HttpStatus.NOT_FOUND.name())
                 .message(exception.getMessage()).
-                path(request.getContextPath())
-                .time(LocalDateTime.now())
+                path(((ServletWebRequest)request).getRequest().getRequestURI())
+                .timestamp(LocalDateTime.now().toString())
                 .build();
-        var statusCode = HttpStatus.NOT_FOUND;
-        logger.error("Entity not found exception: {},HttpStatus: {} , trace-Id: {} ", exc,statusCode,request.getHeader("trace-Id"));
+        var status = HttpStatus.NOT_FOUND;
+        logger.error("Entity not found exception: {},HttpStatus: {} , trace-Id: {} ", exc,status,request.getHeader("trace-Id"));
         return  response.apply(exc, HttpStatus.NOT_FOUND);
     }
     @ExceptionHandler(value = {EntityAlreadyExistException.class})
-    public  ResponseEntity<?>  Exits(EntityAlreadyExistException exception, WebRequest request){
+    public  ResponseEntity<?>  Exits(EntityAlreadyExistException exception,final HttpServletRequest request){
         var exc = AppException.builder()
-                .statusCode(HttpStatus.CONFLICT.value())
+                .status(HttpStatus.CONFLICT.value())
                 .statusCodeMessage(HttpStatus.CONFLICT.name())
                 .message(exception.getMessage()).
-                path(request.getContextPath())
-                .time(LocalDateTime.now())
+                path(((ServletWebRequest)request).getRequest().getRequestURI())
+                .timestamp(LocalDateTime.now().toString())
                 .build();
-        var statusCode = HttpStatus.CONFLICT;
-        logger.error("Duplicated entity  exception: {},HttpStatus: {} , trace-Id: {} ", exc,statusCode,request.getHeader("trace-Id"));
+        var status = HttpStatus.CONFLICT;
+        logger.error("Duplicated entity  exception: {},HttpStatus: {} , trace-Id: {} ", exc,status,request.getHeader("trace-Id"));
         return  response.apply(exc, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(value = {InvalidEntityException.class})
     public  ResponseEntity<?> Invalid(EntityAlreadyExistException exception, WebRequest request){
         var exc = AppException.builder()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .status(HttpStatus.BAD_REQUEST.value())
                 .statusCodeMessage(HttpStatus.BAD_REQUEST.name())
                 .message(exception.getMessage()).
-                path(request.getContextPath())
-                .time(LocalDateTime.now())
+                path(((ServletWebRequest)request).getRequest().getRequestURI())
+                .timestamp(LocalDateTime.now().toString())
                 .build();
-        var statusCode = HttpStatus.BAD_REQUEST;
-        logger.error("Invalid entity exception: {},HttpStatus: {} , trace-Id: {} ", exc,statusCode,request.getHeader("trace-Id"));
+        var status = HttpStatus.BAD_REQUEST;
+        logger.error("Invalid entity exception: {},HttpStatus: {} , trace-Id: {} ", exc,status,request.getHeader("trace-Id"));
         return  response.apply(exc, HttpStatus.BAD_REQUEST);
     }
 

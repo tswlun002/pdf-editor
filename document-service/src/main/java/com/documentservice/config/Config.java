@@ -45,8 +45,8 @@ public class Config {
         return new RestTemplate(requestFactory);
     }
     @Bean
-    public ErrorDecoder errorDecoder(ModelMapper modelMapper) {
-        return new CustomErrorDecoder(modelMapper);
+    public ErrorDecoder errorDecoder() {
+        return new CustomErrorDecoder();
     }
     @Bean
     ModelMapper modelMapper(){
