@@ -12,7 +12,8 @@ public class RoutesConfig {
     public RouteLocator routes(RouteLocatorBuilder builder) {
         return builder.routes().
                 route(predicateSpec -> predicateSpec.path("/pdf-editor/users/**").
-                        filters(filterSpec->filterSpec.rewritePath("/pdf-editor/users/(?<segment>.*)","/pdf-editor/users/${segment}"))
+                        filters(filterSpec->filterSpec.rewritePath("/pdf-editor/users/(?<segment>.*)","/pdf-editor/users/${segment}")
+                                .circuitBreaker(circuitConfi->circuitConfi.setName("userServiceCircuitBreaker")))
                         .uri("lb://USERS"))
                 .route(predicateSpec -> predicateSpec.path("/pdf-editor/documents/**").
                         filters(filterSpec->filterSpec.rewritePath("/pdf-editor/documents/(?<segment>.*)","/pdf-editor/documents/${segment}"))
