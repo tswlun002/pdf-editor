@@ -18,6 +18,11 @@ spring:
         enabled: true
       env:
         enabled: true
+    openfeign:
+      circuitbreaker:
+        enabled: true
+      alphanumeric-ids:
+        enabled: true
 
 topics:
   download-document-name: download-document-event

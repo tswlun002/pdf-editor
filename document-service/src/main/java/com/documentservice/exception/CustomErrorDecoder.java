@@ -28,7 +28,6 @@ public class CustomErrorDecoder implements ErrorDecoder {
             LOGGER.error(e.getMessage(),e);
             return new Exception(e.getMessage());
         }
-        LOGGER.info("Error: {}",message);
         var isErrorMessage=message.message()!=null;
         switch (response.status()){
 

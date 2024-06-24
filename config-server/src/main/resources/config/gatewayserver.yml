@@ -2,7 +2,7 @@ server:
   port: 8072
 resilience4j.circuitbreaker:
   configs:
-    userServiceCircuitBreaker:
+    default:
       register-health-indicator: true
       sliding-window-size: 5
       wait-duration-in-open-state: 10000

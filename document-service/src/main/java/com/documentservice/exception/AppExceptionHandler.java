@@ -79,7 +79,7 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
         return  new ResponseEntity<>(exc, HttpStatus.METHOD_NOT_ALLOWED);
     }
    @ExceptionHandler({InternalServerError.class})
-    public  ResponseEntity<?> InternalException(InternalServerError exception, HttpServletRequest request){
+    public  ResponseEntity<?> InternalException(InternalServerError exception,final HttpServletRequest request){
        var exc = AppException.builder()
                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
                .statusCodeMessage(HttpStatus.INTERNAL_SERVER_ERROR.name())

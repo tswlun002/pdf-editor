@@ -13,13 +13,25 @@ public class RoutesConfig {
         return builder.routes().
                 route(predicateSpec -> predicateSpec.path("/pdf-editor/users/**").
                         filters(filterSpec->filterSpec.rewritePath("/pdf-editor/users/(?<segment>.*)","/pdf-editor/users/${segment}")
-                                .circuitBreaker(circuitConfi->circuitConfi.setName("userServiceCircuitBreaker")))
+                                .circuitBreaker(circuitConfi->
+                                         circuitConfi.setName("userServiceCircuitBreaker")
+                                        .setFallbackUri("/pdf-editor/fallback/contact-team")
+                                )
+                        )
                         .uri("lb://USERS"))
                 .route(predicateSpec -> predicateSpec.path("/pdf-editor/documents/**").
-                        filters(filterSpec->filterSpec.rewritePath("/pdf-editor/documents/(?<segment>.*)","/pdf-editor/documents/${segment}"))
+                        filters(filterSpec->filterSpec.rewritePath("/pdf-editor/documents/(?<segment>.*)","/pdf-editor/documents/${segment}")
+                                .circuitBreaker(circuitConfi->
+                                        circuitConfi.setName("documentsCircuitBreaker")
+                                                .setFallbackUri("/pdf-editor/fallback/contact-team")
+                                ))
                         .uri("lb://DOCUMENTS"))
                 .route(predicateSpec -> predicateSpec.path("/pdf-editor/emails/**").
-                        filters(filterSpec->filterSpec.rewritePath("/pdf-editor/emails/(?<segment>.*)","/pdf-editor/email/${segment}"))
+                        filters(filterSpec->filterSpec.rewritePath("/pdf-editor/emails/(?<segment>.*)","/pdf-editor/email/${segment}")
+                                .circuitBreaker(circuitConfi->
+                                        circuitConfi.setName("emailCircuitBreaker")
+                                                .setFallbackUri("/pdf-editor/fallback/contact-team")
+                                ))
                         .uri("lb://EMAIL"))
 
                 .build();
