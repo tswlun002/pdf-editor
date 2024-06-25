@@ -84,7 +84,7 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
                .statusCodeMessage(HttpStatus.INTERNAL_SERVER_ERROR.name())
                .message(exception.getMessage()).
-               path(request.getContextPath())
+               path(request.getRequestURI())
                .timestamp(LocalDateTime.now().toString())
                .build();
        logger.error("Internal server exception exception: {} , trace-Id: {} ", exc,request.getHeader("trace-Id"));
@@ -111,7 +111,7 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
                 .status(HttpStatus.CONFLICT.value())
                 .statusCodeMessage(HttpStatus.CONFLICT.name())
                 .message(exception.getMessage()).
-                path(request.getContextPath())
+                path(request.getRequestURI())
                 .timestamp(LocalDateTime.now().toString())
                 .build();
         logger.error("Duplicated entity  exception: {}, trace-Id: {} ", exc,request.getHeader("trace-Id"));
@@ -124,7 +124,7 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST.value())
                 .statusCodeMessage(HttpStatus.BAD_REQUEST.name())
                 .message(exception.getMessage()).
-                 path(request.getContextPath())
+                 path(request.getRequestURI())
                 .timestamp(LocalDateTime.now().toString())
                 .build();
      logger.error("Invalid entity  exception: {}, trace-Id: {} ", exc,request.getHeader("trace-Id"));
