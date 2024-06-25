@@ -23,6 +23,9 @@ spring:
         enabled: true
       alphanumeric-ids:
         enabled: true
+      httpclient:
+        connection-timeout: 1000
+
 
 topics:
   download-document-name: download-document-event
