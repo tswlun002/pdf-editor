@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class UserImpl implements User {
     private final UserApi userApi;
     private  final ModelMapper mapper;
-    private static Logger logger = LoggerFactory.getLogger(UserImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserImpl.class);
     @Override
     public UserDto getUser(String traceId,String username) throws InvalidUser {
         logger.info("Getting user by username {}, trace-Id: {}", username,traceId);

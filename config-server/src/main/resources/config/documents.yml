@@ -32,3 +32,11 @@ download:
   message:
     successful: "Document is uploaded."
     fail: "Failed to upload document."
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      register-health-indicator: true
+      sliding-window-size: 5
+      wait-duration-in-open-state: 10000
+      permitted-number-of-calls-in-half-open-state: 3
+      failure-rate-threshold: 60

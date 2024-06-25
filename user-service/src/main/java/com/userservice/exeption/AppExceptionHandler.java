@@ -1,6 +1,5 @@
 package com.userservice.exeption;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import lombok.NonNull;
 import org.slf4j.Logger;
@@ -109,7 +108,7 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
         return  response.apply(exc, HttpStatus.NOT_FOUND);
     }
     @ExceptionHandler(value = {EntityAlreadyExistException.class})
-    public  ResponseEntity<?>  Exits(EntityAlreadyExistException exception,final HttpServletRequest request){
+    public  ResponseEntity<?>  Exits(EntityAlreadyExistException exception,final WebRequest request){
         var exc = AppException.builder()
                 .status(HttpStatus.CONFLICT.value())
                 .statusCodeMessage(HttpStatus.CONFLICT.name())
