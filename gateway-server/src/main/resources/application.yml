@@ -23,6 +23,9 @@ spring:
         locator:
           enabled: false
           lower-case-service-id: true
+      httpclient:
+        connect-timeout: 5000
+        response-timeout: 5s
 management:
   endpoints:
     web:

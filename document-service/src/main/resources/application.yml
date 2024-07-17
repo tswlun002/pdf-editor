@@ -18,6 +18,14 @@ spring:
         enabled: true
       env:
         enabled: true
+    openfeign:
+      circuitbreaker:
+        enabled: false
+      alphanumeric-ids:
+        enabled: true
+      httpclient:
+        connection-timeout: 1000
+
 
 topics:
   download-document-name: download-document-event
@@ -61,3 +69,15 @@ info:
   app:
     version: 1.0.0
     description: "Service to manage documents data"
+resilience4j:
+  circuitbreaker:
+    circuitBreakerAspectOrder: 1
+    instances:
+      users:
+        register-health-indicator: true
+        sliding-window-size: 5
+        wait-duration-in-open-state: 10000
+        permitted-number-of-calls-in-half-open-state: 3
+        failure-rate-threshold: 60
+  retry:
+    retryAspectOrder: 2

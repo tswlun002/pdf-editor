@@ -13,8 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping( "pdf-editor/documents/")
@@ -34,6 +33,7 @@ public class PDFController {
         var save= service.saveDocument(traceId,new UserDocument(email,pdf.toByteArray(),name+"_file_" ));
         return  new ResponseEntity<>(save?"Document is uploaded":"Failed to upload document",save?OK:NOT_ACCEPTABLE);
     }
+
     @GetMapping("download/{email}/{id}")
     public  ResponseEntity<?> downloadDocument(@RequestHeader("trace-Id") String traceId,@PathVariable("email")
     @Email(message = "Email must be valid email address")String email,@PathVariable("id")String id){

@@ -1,5 +1,6 @@
 package com.documentservice.exception;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Response;
 import feign.codec.ErrorDecoder;
@@ -16,39 +17,40 @@ public class CustomErrorDecoder implements ErrorDecoder {
     private static  final Logger LOGGER = LoggerFactory.getLogger(CustomErrorDecoder.class);
     @Override
     public Exception decode(String s, Response response) {
-
-        var api = s.split("#")[0];
-        var entity = api.substring(0,api.length()-3);
-        AppException message = null;
+        AppException error = null;
+        ObjectMapper mapper = new ObjectMapper().
+                configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                .configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
         try (InputStream bodyIs = response.body()
                 .asInputStream()) {
-             ObjectMapper mapper = new ObjectMapper();
-            message = mapper.readValue(bodyIs, AppException.class);
+
+            error = mapper.readValue(bodyIs, AppException.class);
         } catch (IOException e) {
             LOGGER.error(e.getMessage(),e);
             return new Exception(e.getMessage());
         }
-        LOGGER.info("Error: {}",message);
-        var isErrorMessage=message.message()!=null;
-        switch (response.status()){
-
-            case 400->{
-                LOGGER.error(isErrorMessage?"Error: "+message:entity+" invalid request.");
-                 throw new InvalidRequestException(isErrorMessage? message.message():entity+" invalid request.");
+        LOGGER.error("User service error: {}",error);
+        var isErrorMessage=error.message()!=null;
+        var traceId=response.request().headers().get("trace-id");
+        switch (error.status()) {
+            case 400 -> {
+                LOGGER.error("User invalid request, trace-id: {}",traceId);
+                throw new InvalidRequestException(" invalid request.");
             }
-            case 404->{
-                LOGGER.error(isErrorMessage?"Error: "+message:entity+" is not found.");
-                 throw  new EntityNotFoundException(isErrorMessage? message.message():entity+" is not found.");
+            case 404 -> {
+                LOGGER.error(isErrorMessage ? "Error: " + error : "User is not found, trace-id: {}",traceId);
+                throw new EntityNotFoundException(isErrorMessage ? error.message() : "User is not found.");
             }
-            case 409 ->{
-                LOGGER.error(isErrorMessage?"Error: "+message:entity+" already exists.");
-                 throw  new EntityAlreadyExistException(isErrorMessage? message.message():entity+" already exists.");
+            case 409 -> {
+                LOGGER.error(isErrorMessage ? "Error: " + error : "User already exists, trace-id: {}",traceId);
+                throw new EntityAlreadyExistException(isErrorMessage ? error.message() : "User already exists.");
             }
             default -> {
-                LOGGER.error(isErrorMessage?"Error: "+message:entity+" service internal server error.");
-                 throw  new InternalServerError(isErrorMessage? message.message():entity+" service internal server error.");
-            }
 
+                    LOGGER.error("Unexpected Error: trace-id:{}, error: {}",traceId,error);
+                    throw new InternalServerError(isErrorMessage ? error.message() : "User service internal server error.");
+
+            }
         }
     }
 
