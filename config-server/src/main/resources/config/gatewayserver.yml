@@ -5,6 +5,6 @@ resilience4j.circuitbreaker:
     default:
       register-health-indicator: true
       sliding-window-size: 5
-      wait-duration-in-open-state: 10000
+      wait-duration-in-open-state: 20000
       permitted-number-of-calls-in-half-open-state: 3
       failure-rate-threshold: 60

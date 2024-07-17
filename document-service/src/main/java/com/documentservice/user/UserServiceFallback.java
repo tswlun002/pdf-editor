@@ -6,6 +6,7 @@ import com.documentservice.exception.EntityNotFoundException;
 import com.documentservice.exception.InternalServerError;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import feign.RetryableException;
 import io.github.resilience4j.ratelimiter.RequestNotPermitted;
 import org.apache.kafka.common.errors.InvalidRequestException;
 import org.slf4j.Logger;
@@ -16,17 +17,31 @@ import org.springframework.integration.handler.advice.RequestHandlerCircuitBreak
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.Objects;
 
 
-public class UserServiceFallback implements UserApi{
+public class UserServiceFallback {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceFallback.class);
     private final Throwable cause;
 
     public UserServiceFallback(Throwable cause) {this.cause=cause;}
-    @Override
+
     public ResponseEntity<?> getUser(String traceId, String username) {
         LOGGER.error("Error cause: {}, trace-id:{}",cause,traceId);
+
+        if(cause.getCause() instanceof RetryableException retryableException){
+            LOGGER.error("Make retry for request: {}, trace-id:{}",cause,traceId);
+            throw  new RetryableException(
+                    retryableException.status(),
+                    retryableException.getMessage(),
+                    retryableException.method(),
+                    cause,
+                    new Date(System.currentTimeMillis()+50L),
+                    retryableException.request()
+
+            );
+        }
         AppException error = null;
         var timeoutOrServiceDown=false;
         try{
