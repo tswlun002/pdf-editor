@@ -2,11 +2,11 @@ spring:
   application:
     name: "users"
   config:
-    import: "configserver:http://configServerApp:8071/"
+    import: "configserver:http://configServerApp:8080/"
   cloud:
     config:
       enabled: true
-      uri: http://configServerApp:8071
+      uri: http://configServerApp:8080
     stream:
       kafka:
         binder:
@@ -18,9 +18,6 @@ spring:
         enabled: true
       env:
         enabled: true
-
-server:
-  port: 8080
 
 management:
   endpoints:
@@ -41,7 +38,7 @@ eureka:
     fetch-registry: true
     register-with-eureka: true
     serviceUrl:
-      defaultZone: http://${eureka.instance.hostname}:8070/eureka/
+      defaultZone: http://${eureka.instance.hostname}:8080/eureka/
     healthcheck:
       enabled: true
 endpoints:

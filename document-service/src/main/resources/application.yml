@@ -2,11 +2,11 @@ spring:
   application:
     name: "documents"
   config:
-    import: "configserver:http://configServerApp:8071/"
+    import: "configserver:http://configServerApp:8080/"
   cloud:
     config:
       enabled: true
-      uri: "http://configServerApp:8071"
+      uri: "http://configServerApp:8080"
     stream:
       kafka:
         binder:
@@ -29,9 +29,6 @@ spring:
 
 topics:
   download-document-name: download-document-event
-
-server:
-  port: 8082
 management:
   endpoints:
     web:
@@ -52,7 +49,7 @@ eureka:
     fetch-registry: true
     register-with-eureka: true
     serviceUrl:
-      defaultZone: http://${eureka.instance.hostname}:8070/eureka/
+      defaultZone: http://${eureka.instance.hostname}:8080/eureka/
     healthcheck:
       enabled: true
 endpoints:

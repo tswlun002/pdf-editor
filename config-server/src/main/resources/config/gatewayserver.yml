@@ -1,11 +1,9 @@
-server:
-  port: 8072
-spring:
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          jwk-set-uri: "http://keyClock:8080/realms/master/protocol/openid-connect/certs"
+#spring:
+#  security:
+#    oauth2:
+#      resourceserver:
+#        jwt:
+#          jwk-set-uri: "http://keyClock:8080/realms/master/protocol/openid-connect/certs"
 resilience4j.circuitbreaker:
   configs:
     default:
