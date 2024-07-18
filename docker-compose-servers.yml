@@ -86,6 +86,21 @@ services:
       - discoveryServerApp
     networks:
       - server_net
+
+  #KEYCLOCK CONTAINER
+  keyClock:
+    image: quay.io/keycloak/keycloak:23.0.6
+    container_name: keyClock
+    hostname: keyClock
+    ports:
+      - "7080:8080"
+    networks:
+      - server_net
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+    command:
+      - start-dev
 networks:
   server_net:
     external: true

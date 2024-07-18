@@ -26,6 +26,13 @@ spring:
       httpclient:
         connect-timeout: 5000
         response-timeout: 5s
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: "http://keyClock:8080/realms/master/protocol/openid-connect/certs"
+  main:
+    allow-bean-definition-overriding: true
 management:
   endpoints:
     web:
