@@ -1,12 +1,14 @@
+server:
+  port: 8072
 spring:
   application:
     name: "gatewayserver"
   config:
-    import: "configserver:http://configServerApp:8071/"
+    import: "configserver:http://configServerApp:8080/"
   cloud:
     config:
       enabled: true
-      uri: http://configServerApp:8071
+      uri: http://configServerApp:8080
     stream:
       kafka:
         binder:
@@ -26,6 +28,13 @@ spring:
       httpclient:
         connect-timeout: 5000
         response-timeout: 5s
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: "http://keyClock:8080/realms/master/protocol/openid-connect/certs"
+  main:
+    allow-bean-definition-overriding: true
 management:
   endpoints:
     web:
@@ -45,7 +54,7 @@ eureka:
     fetch-registry: true
     register-with-eureka: true
     serviceUrl:
-      defaultZone: http://${eureka.instance.hostname}:8070/eureka/
+      defaultZone: http://${eureka.instance.hostname}:8080/eureka/
     healthcheck:
       enabled: true
 logging:

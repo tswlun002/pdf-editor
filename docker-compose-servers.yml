@@ -9,8 +9,6 @@ services:
       context: ./config-server
     image: pdf_editor_config:latest
     container_name: configServerApp
-    ports:
-      - "8071:8071"
     networks:
       - server_net
 
@@ -21,8 +19,6 @@ services:
       context: ./discovery-server
     image: pdf_editor_discover:latest
     container_name: discoveryServerApp
-    ports:
-      - "8070:8070"
     depends_on:
       - configServerApp
     networks:
@@ -48,8 +44,6 @@ services:
       context: ./document-service
     image: pdf-editor-document:latest
     container_name: documentsServerApp
-    ports:
-      - "8082:8082"
     depends_on:
       - configServerApp
       - discoveryServerApp
@@ -64,8 +58,6 @@ services:
       context: ./email-service
     image: pdf-editor-email:latest
     container_name:  emailServerApp
-    ports:
-      - "8083:8083"
     depends_on:
       - configServerApp
       - discoveryServerApp
@@ -79,13 +71,26 @@ services:
     image: pdf-editor-user:latest
     container_name: usersServerApp
     hostname: usersServerApp
-    ports:
-      - "8080:8080"
     depends_on:
       - configServerApp
       - discoveryServerApp
     networks:
       - server_net
+
+  #KEYCLOCK CONTAINER
+  keyClock:
+    image: quay.io/keycloak/keycloak:23.0.6
+    container_name: keyClock
+    hostname: keyClock
+    ports:
+      - "7080:8080"
+    networks:
+      - server_net
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+    command:
+      - start-dev
 networks:
   server_net:
     external: true

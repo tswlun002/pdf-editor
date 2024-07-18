@@ -47,10 +47,20 @@ spring:
       properties:
         topic:
           replication-factor: 1
-
-
-server:
-  port: 8071
+eureka:
+  instance:
+    hostname: discoveryServerApp
+    preferIpAddress: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:8080/eureka/
+    healthcheck:
+      enabled: true
+endpoints:
+  shutdown:
+    enabled: true
 encrypt:
   key: 7E93D539EAA5C42F8523AB1627D1B
 management:

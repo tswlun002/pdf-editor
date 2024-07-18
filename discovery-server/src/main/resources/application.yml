@@ -2,11 +2,11 @@ spring:
   application:
     name: discoveryserver
   config:
-    import: "configserver:http://configServerApp:8071/"
+    import: "configserver:http://configServerApp:8080/"
   cloud:
     config:
       enabled: true
-      uri: "http://configServerApp:8071"
+      uri: "http://configServerApp:8080"
     stream:
       kafka:
         binder:
